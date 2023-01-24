@@ -22,6 +22,7 @@ def get_sector_industry_weights(portfolios_df, sectors_mapping_df):
     all_df=all_df.sort_values('weights', axis = 0, ascending=False)
     all_columns=all_df.columns.values.tolist()[:-1]
     
+    #using get_breakdowns function above create a list of breakdown by sector, industry, ticker name and market cap
     breakdown_list=[get_breakdowns(all_df, column) for column in all_columns]
     breakdown_list.append(all_df)
     
