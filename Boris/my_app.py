@@ -111,4 +111,4 @@ for portfolio in portfolios_info:
             st.write(breakdown)
     i+=1
     
-st.bar_chart(portfolios_info[0][3])
+st.write(portfolios_info[0][3])
