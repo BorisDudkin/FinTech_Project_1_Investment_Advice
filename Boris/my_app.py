@@ -61,7 +61,16 @@ sectors_mapping_df=sectors_mapping_df.set_index('Sector')
 
 
 with st.sidebar:
+      
+    
     st.header('Questionnaire:')
+    
+    st.subheader('Initial investment')
+    initial_investment = st.number_input('How much money would you like to invest (in USD)?')
+
+    st.subheader('Investment time horizon')
+    time_horizon = st.number_input('What is your planned investment time horizon (in years)?')
+    
     st.subheader('Select between 0 and 1, where: 0 is Strongly Disagree and  1 is Strongly Agree')
     i=0
     t_score=0
