@@ -3,6 +3,8 @@ import os
 import http.client
 import json
 import pandas as pd
+import time
+
 def yahoo_api_call(ticker,interval='1d'):
     env_check=load_dotenv()
     if env_check==False:
@@ -53,6 +55,7 @@ def historical_prices(weights_df):
                 api_calls_made+=1
             else:
                 time.sleep(100)
+                print("Waiting 100 seconds to avoid overloading the API")
                 dataframe_list.append(yahoo_api_call(ticker))
                 api_calls_made=1
         df_historical=pd.concat(dataframe_list,axis=1,keys=tickers_list) #Builds the dataframe from the list
@@ -61,3 +64,17 @@ def historical_prices(weights_df):
         return(df_historical) 
     else:
         print("Please input a dataframe into the historical_prices function") #This message will appear if the input is not a dataframe
+        
+def weighted_returns(historical_data,weights_df):
+    column_names=list(historical_data)
+    close_column_names=[]
+    for tup in column_names:
+        if 'close' in tup:
+            close_column_names.append(tup)
+    ticker_names=[]
+    for tup in close_column_names:
+        ticker_names.append(tup[0])
+    close_returns_df=historical_data[close_column_names].pct_change().dropna()
+    close_returns_df.columns=ticker_names
+    weighted_returns_df=close_returns_df.dot(weights_df)
+    return(weighted_returns_df)
