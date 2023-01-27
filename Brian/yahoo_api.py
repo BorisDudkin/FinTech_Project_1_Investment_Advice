@@ -42,26 +42,22 @@ def dataframe_maker(weights):
     weighted_daily_returns=daily_returns*weight_series
     return({'Historical prices':df_historical,'Historical close prices':close_df,'Daily returns':daily_returns,'Weighted daily returns':weighted_daily_returns})
     
-def historical_df_maker(weights):
-    if isinstance(weights,pd.DataFrame): #Checks if the input is a dataframe
-        portfolio_names=[] #Creates an empty list to hold the name of each portfolio
-        for column_name in weights: #Saves each column name to a list
-            portfolio_names.append(column_name)
-        weights_dictionary=weights.to_dict() #Converts the dataframe to a dictionary
-        for key in weights_dictionary:
-            weights_dictionary[key]={x:y for x,y in weights_dictionary[key].items() if y!=0} #Removes zeroes from dictionary
-        api_calls_made=0 #Sets the number of api calls to 0
-        api_data={} #Creates a dictionary to hold the output of the function
-        for portfolio in portfolio_names: #For each portfolio run the following loop:
-            api_calls_to_make=len(weights_dictionary[portfolio]) #Check how many api calls will be made 
-            if api_calls_to_make+api_calls_made>=10: #If we will make over 10 calls, wait 60 seconds and print a message
-                print("Program is waiting 1 minute to avoid reaching the API request limit")
-                time.sleep(70)
-                api_calls_made=0 #Resets the calls made to zero
+def historical_prices(weights_df):
+    if isinstance(weights_df,pd.DataFrame): #Checks that the input is a dataframe
+        tickers_list=list(weights_df.index) #Converts the index to a list
+        dataframe_list=[] #This list will hold the dataframes resulting from the api call
+        api_calls_made=0 #Creates a variable to set the number of api calls
+        for ticker in tickers_list: #For each ticker, checks if there have been less than 10 calls made and will call the api. Then, will update the number of calls. When it gets too high, the loop will stop for 100 seconds before continuing.
+            if api_calls_made<10:
+                dataframe_list.append(yahoo_api_call(ticker))
+                api_calls_made+=1
             else:
-                api_data[portfolio]=dataframe_maker(weights_dictionary[portfolio]) #Runs the dataframe_maker function for each ticker in the portfolio and saves
-                api_calls_made +=api_calls_to_make #Adds the number of api calls made
-            print(f"Called the Yahoo API for the tickers in {portfolio}")
-        return api_data
-    elif isinstance(weights,dict):
-        print("A dictionary was input- please input a dataframe or use the dataframe_maker function to make the API call from a dictionary.")
+                time.sleep(100)
+                dataframe_list.append(yahoo_api_call(ticker))
+                api_calls_made=1
+        df_historical=pd.concat(dataframe_list,axis=1,keys=tickers_list) #Builds the dataframe from the list
+        df_historical.dropna(how='any',inplace=True) #Removes na values
+        df_historical=df_historical[~(df_historical==0).any(axis=1)] #Removes rows with any zero values
+        return(df_historical) 
+    else:
+        print("Please input a dataframe into the historical_prices function") #This message will appear if the input is not a dataframe
