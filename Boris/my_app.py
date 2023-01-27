@@ -13,8 +13,9 @@ sys.path.append('..\\Adam\\')
 from Score_calculator.questionnaire_st import get_bucket
 from Sector_name.sector_industry import get_sector_industry_weights
 from Static_data.static_data import step, capacity_questions, n_days, timeframe
-from MonteCarlo.monte_carlo_input import get_MC_input
+from Monte_Carlo.monte_carlo_input import get_MC_input
 from API_calls.API_calls import get_api_data
+from MonteCarlo.MonteCarloEdited import MCSimulation
 
 #create internet page name
 st.set_page_config(page_title="Investment Advisor 💲")
@@ -202,8 +203,13 @@ api_call_df=get_api_data(tickers, n_days, timeframe)
 Monte_Carlo__list=[get_MC_input(api_call_df, four_portfolios_df, portfolio, initial_investment, time_horizon) for portfolio in four_portfolios]
 
 
+#instantiating the class:
+Capacity_MC=MCSimulation(Monte_Carlo__list[0][0], Monte_Carlo__list[0][2], Monte_Carlo__list[0][1], 300, int(Monte_Carlo__list[0][3]))
+
+# capacity_cum_returns=Capacity_MC.calc_cumulative_return()
+
 with tab3:
-    st.write(Monte_Carlo__list[3][0].head())
-    st.write(Monte_Carlo__list[3][1])
-    st.write(Monte_Carlo__list[3][2])
-    st.write(Monte_Carlo__list[3][3])
+    st.write(Monte_Carlo__list[0][0])
+    st.write(Monte_Carlo__list[0][1])
+    st.write(Monte_Carlo__list[0][2])
+    st.write(int(Monte_Carlo__list[0][3]))
