@@ -12,7 +12,7 @@ sys.path.append('..\\Adam\\')
 # import math
 from Score_calculator.questionnaire_st import get_bucket
 from Sector_name.sector_industry import get_sector_industry_weights
-from Static_data.static_data import step, capacity_questions
+from Static_data.static_data import step, capacity_questions, n_days, timeframe
 from MonteCarlo.monte_carlo_input import get_MC_input
 from API_calls.API_calls import get_api_data
 
@@ -188,8 +188,8 @@ with tab2:
 
 # create an API call and store data
 tickers = list(four_portfolios_df.index)
-n_days=10
-timeframe='1Day'
+# n_days=10
+# timeframe='1Day'
 api_call_df=get_api_data(tickers, n_days, timeframe)
 
 # inputs to Monte Carlo instance:
@@ -203,4 +203,7 @@ Monte_Carlo__list=[get_MC_input(api_call_df, four_portfolios_df, portfolio, init
 
 
 with tab3:
+    st.write(Monte_Carlo__list[3][0].head())
     st.write(Monte_Carlo__list[3][1])
+    st.write(Monte_Carlo__list[3][2])
+    st.write(Monte_Carlo__list[3][3])

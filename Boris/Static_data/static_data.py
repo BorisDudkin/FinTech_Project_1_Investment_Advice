@@ -3,3 +3,7 @@ step = 0.1
 
 #this is a list of dbs that contain risk capacity related questions. If new questions are added and the corresponding dbs created, this list has to be updated
 capacity_questions=['Q1_Capacity','Q2_Capacity','Q3_Capacity','Q4_Capacity','Q5_Capacity']
+
+#timeframe and number of days for historical data API retrieval:
+n_days=1200
+timeframe='1Day'
