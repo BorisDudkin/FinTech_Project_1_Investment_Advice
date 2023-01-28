@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 import plotly.graph_objects as go
 import plotly.express as px
+
 sys.path.append('..\\Brian\\')
 sys.path.append('..\\Adam\\')
 
@@ -18,15 +19,17 @@ from API_calls.API_calls import get_api_data
 from MonteCarlo.MonteCarloEdited import MCSimulation
 
 #create internet page name
-st.set_page_config(page_title="Investment Advisor 💲")
+st.set_page_config(page_title="Investment Advisor 💰", layout='wide')
 
 #create four tabs to display data as per below breakdown
-tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Future Returns'])
+tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Future Projected Returns'])
 
 #tab 1 will contain introduction
 with tab1:
 
-    st.title('Investment Advisor 💰')
+    st.title('Investment Advisor')
+    
+    st.image('../Images/investment_bag.png',use_column_width='Auto')
 
     # DATE_COLUMN = 'date/time'
 
@@ -82,10 +85,10 @@ with st.sidebar:
     st.header('Questionnaire:')
     
     st.subheader('Initial investment')
-    initial_investment = st.number_input('How much money would you like to invest (in USD)?')
+    initial_investment = st.number_input('How much money would you like to invest (in USD)?', min_value=500, value=500, step=500)
 
     st.subheader('Investment time horizon')
-    time_horizon = st.number_input('What is your planned investment time horizon (in years)?')
+    time_horizon = int(st.number_input('What is your planned investment time horizon (in years)?', value = 1, step=1))
     
     st.subheader('Select between 0 and 1, where: 0 is Strongly Disagree and  1 is Strongly Agree')
     i=0
@@ -116,12 +119,16 @@ capacity=get_bucket(capacity_score, step)
 #tab 2 will display the selected portfolios and their composition (an option to select a portfolio for detailed review will be given to the investor):
 
 with tab2:
-
-    st.header('Assessment of the scores and corresponding selected portfolios:')
-
+    
+    st.image('../Images/pie-chart.png',use_column_width='Auto')
+    
+    st.header('The scores and the corresponding selected portfolios:')
+   
     st.subheader('Scores Assessment:')
 
     st.write(f'With the risk scores progressing from the most conservative (score 0) to the highest risk (score 1) you scored **:blue[{capacity_score}]** on your _capacity to absorbe risk_ and **:blue[{tolerance_score}]** on your _risk tolerance_')
+    st.write("Based on these scores, we created **:blue[Risk Capacity]** and **:blue[Risk Tolerance]** portfolios. To provide a **:blue[Benchmark]**, we included our 40/60 traditional in our analysis.")
+    st.write("Finally, a new Crypto enhanced portfolio **:blue[Cryptomix]** will help investors analyse how an addition of digital assets can affect the portfolio performance")
 
     # create two list of all portfolios for comparison (one for selecting the portfolios from the portfolios_df and one for aggregating into a new dataframe of four portfolios for further financial analysis
     # tolerace and capacity represent the buckets we received from the get_capacity_score function above
@@ -137,9 +144,9 @@ with tab2:
     four_portfolios_df= pd.concat(portfolios_list, axis=1, ignore_index=False)
     four_portfolios_df.columns = four_portfolios
     four_portfolios_df=four_portfolios_df.loc[(four_portfolios_df!=0).any(axis=1)]
-    st.table(four_portfolios_df)
+    # st.table(four_portfolios_df)
 
-    st.subheader('Portfolios Characterisitcs:')
+    
     # create portfolios_info list that shores sector, industry and names breakdowns per selected portfolios
     portfolios_info= [get_sector_industry_weights(portfolio, sectors_mapping_df) for portfolio in portfolios_list]
 
@@ -154,21 +161,41 @@ with tab2:
     Name_breakdown_df = four_portfolios_dict[portfolio_selection][sectors_mapping_df.columns.to_list().index('Name')+1]
     Market_cap_breakdown_df = four_portfolios_dict[portfolio_selection][sectors_mapping_df.columns.to_list().index('Market Cap & Style')+1]
     
-
-    st.markdown('**Portfolio composition by**:')
+    #creating plotly charts for each breakdown
+    Name_breakdown_df=Name_breakdown_df.reset_index()
+    fig_name_breakdown=px.pie(Name_breakdown_df, names = 'Name', values='weights',title='<b>by Company<b>')
+    
+    sector_breakdown_df=sector_breakdown_df.reset_index()
+    fig_sector_breakdown=px.pie(sector_breakdown_df, names = 'Sector', values='weights',title='<b>by Sector<b>')
+    
+    Industry_breakdown_df=Industry_breakdown_df.reset_index()
+    fig_industry_breakdown=px.pie(Industry_breakdown_df, names = 'Industry', values='weights',title='<b>by Industry<b>')
+    
+    Market_cap_breakdown_df=Market_cap_breakdown_df.reset_index()
+    fig_market_cap_breakdown=px.pie(Market_cap_breakdown_df, names = 'Market Cap & Style', values='weights',title='<b> by Market Cap<b>')
+    
+    st.subheader('Portfolio Composition:')
+    
+    #display charts
+    st.plotly_chart(fig_name_breakdown,use_container_width=True)
+    
+    # st.write('**Portfolio composition by**:')
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.write('**:blue[Sector]**')
-        st.table(sector_breakdown_df)
+        # st.write('**:blue[Sector]**')
+        # st.table(sector_breakdown_df)
+        st.plotly_chart(fig_sector_breakdown,use_container_width=True)                  
     with col2:
-        st.write('**:blue[Industry]**')
-        st.table(Industry_breakdown_df)
+        # st.write('**:blue[Industry]**')
+        # st.table(Industry_breakdown_df)
+        st.plotly_chart(fig_industry_breakdown,use_container_width=True)
     with col3:
-        st.write('**:blue[Market Cap & Style]**')
-        st.table(Market_cap_breakdown_df)
+        # st.write('**:blue[Market Cap & Style]**')
+        # st.table(Market_cap_breakdown_df)
+        st.plotly_chart(fig_market_cap_breakdown,use_container_width=True)
    
     #select the last element in the breakdown list that contains the dataframe of all the fund characteristics:
-    st.write('**:blue[Summary Table]**')
+    st.write('**Summary Table**')
     st.table(four_portfolios_dict[portfolio_selection][-1])
 
 # This section coveres getting ready and making an API call to extract the pricing data for our selected portfolios (API call function accepts the dictionary of tickers and returns prices in the format needed for Monte carlo simulation and daily returns needed for past performance analysis):
