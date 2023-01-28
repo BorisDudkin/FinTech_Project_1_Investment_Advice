@@ -27,6 +27,14 @@ from MonteCarlo.MonteCarloEdited import MCSimulation
 #create internet page name
 st.set_page_config(page_title="Investment Advisor 💰", layout='wide')
 
+# Section 1: Establishing database connection for extracting data:
+# 1) Create Database connection string to a database where questionnaires, weights, portfolios and securitiy deail tables are stored (position data)
+database_connection_string = 'sqlite:///Resources/investor.db'
+
+# 2) Create an engine to interact with the database
+engine = sqlalchemy.create_engine(database_connection_string)
+
+# Section 2: Create a set up for ALPACA API Calls:
 # Load .env file
 load_dotenv()
 
@@ -38,6 +46,7 @@ alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
 # If Streamlit runs the function for the first time and stores the result in a local cache.
 # Then, next time the function is called, if the function nae, its body and parameters have not changed Streamlit knows it can skip executing the function altogether. 
 # Instead, it just reads the output from the local cache and passes it on to the caller.
+# Call api to fetch market data
 @st.cache
 def get_api_data(tickers, days, timeframe='1Day'):
    
@@ -111,65 +120,40 @@ def get_api_data(tickers, days, timeframe='1Day'):
     
     return (total_df, daily_returns_df)
 
-# Create four tabs to display our application as per below breakdown
-tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Future Projected Returns'])
-
-# Display tab1: tab 1 will contain an introduction:
-with tab1:
-
-    st.title('Investment Advisor')
-    
-    st.image('../Images/investment_bag.png',use_column_width='Auto')
-
-    # DATE_COLUMN = 'date/time'
-
-    st.header('About This Application')
-
-    my_text = "The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorbe risk. Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering. Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stock. To increase clients' awareness of our new Crypto mix ETF, we will include the comparison performance of this fund too."
-
-    st.write(my_text)
-
-    with st.expander("About Us"):
-        st.write("We offer our clients a tailored approach to constructing an investment portfolio based on their risk tolerance and personal cicumstances to absorbe the risk arising from the investment activities.")
-
-    with st.expander("Funds Description and Risk profile"):
-        st.write("Assets in our funds range from High Growth and Crypto to Value stocks and Fixed Income securities of Long term and Short-term maturities. Each fund is constructed with the risk profile of an investor in mind. Our funds are non-diversified and may experience greater volatility than more diversified investments. To compensate for the limited diversification, we only offer Large Cap US equities and Domestic stocks and bonds to reduce volatility brought by small- and medium-cap equities and excluding foreign currency exposure. And yet, there will always be risks involved with ETFs' investments, resulting in the possible loss of money")
+# the function below transforms db tables to dataframes for further processing:
+def read_table_to_df(table, engine):
+    return pd.read_sql_table(table, con=engine)
 
 
-# Section 1 below will create a connection to our database and upload relevant tables to dataframes for further analysis
-
-# Database connection string to the clean NYSE database
-database_connection_string = 'sqlite:///Resources/investor.db'
-
-# Create an engine to interact with the database
-engine = sqlalchemy.create_engine(database_connection_string)
+# Section 3: upload relevant tables to dataframes for further analysis
 
 capacity_tables=capacity_questions
 risk_capacity=[]
 for table in capacity_tables:
     pd_name= table+"_df"
-    pd_name = pd.read_sql_table(table, con=engine)
+    pd_name = read_table_to_df(table, engine)
     pd_name=pd_name.set_index('Questions')
     risk_capacity.append(pd_name)
          
 # read tolerance questionnaire into a dataframes risk_tolerance:
-risk_tolerance_df =  pd.read_sql_table('risk_tolerance_questions', con=engine)
+risk_tolerance_df =  read_table_to_df('risk_tolerance_questions', engine)
 risk_tolerance_df=risk_tolerance_df.set_index('Questions')
 
 # read portfolios into a portfolios_df dataframe:
-portfolios_df =  pd.read_sql_table('portfolios', con=engine)
+portfolios_df =  read_table_to_df('portfolios', engine)
 portfolios_df=portfolios_df.set_index('Risk_tolerance')
 
 # read sectors into a sectors_mapping_df dataframe:
-sectors_mapping_df =  pd.read_sql_table('sector_mapping', con=engine)
+sectors_mapping_df =  read_table_to_df('sector_mapping', engine)
 sectors_mapping_df=sectors_mapping_df.set_index('Sector')
 
-# Section 2 -create an API call and store Monte Carlo input data and daily returns data for the set of our portfolios
+# Section 4: create an API call and store Monte Carlo input data and daily returns data for the set of our portfolios
 tickers_api_call = portfolios_df.columns.to_list()
 api_call_df, daily_returns_df=get_api_data(tickers_api_call, n_days, timeframe)
 
-# Section 3 - Generate risk scores (capacity score and tolerance score based on the answers to the questionnaires
-# Subheader will display the questionnaire to determine the risk tolearance and risk capacity profiles of an investor:
+
+# Section 5 - GAtheering data from an investor and generating risk scores (capacity score and tolerance score based on the answers to the questionnaires
+# will display the questionnaire to determine the risk tolearance and risk capacity profiles of an investor:
 
 with st.sidebar:
     
@@ -205,7 +189,31 @@ tolerance=get_bucket(tolerance_score, step)
 capacity_score= round(c_score/len(risk_capacity),2)
 capacity=get_bucket(capacity_score, step)
 
-# Section 4 - Creating a subset of portfolios for the investor's review based on the above scores.
+# Section 6: Display output:
+# Create four tabs to display our application as per below breakdown
+tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Future Projected Returns'])
+
+# Section 6.1 Introduction: 
+#tab 1 will contain an introduction:
+with tab1:
+
+    st.title('Investment Advisor')
+    
+    st.image('../Images/investment_bag.png',use_column_width='Auto')
+
+    st.header('About This Application')
+
+    my_text = "The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorbe risk. Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering. Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stock. To increase clients' awareness of our new Crypto mix ETF, we will include the comparison performance of this fund too."
+
+    st.write(my_text)
+
+    with st.expander("About Us"):
+        st.write("We offer our clients a tailored approach to constructing an investment portfolio based on their risk tolerance and personal cicumstances to absorbe the risk arising from the investment activities.")
+
+    with st.expander("Funds Description and Risk profile"):
+        st.write("Assets in our funds range from High Growth and Crypto to Value stocks and Fixed Income securities of Long term and Short-term maturities. Each fund is constructed with the risk profile of an investor in mind. Our funds are non-diversified and may experience greater volatility than more diversified investments. To compensate for the limited diversification, we only offer Large Cap US equities and Domestic stocks and bonds to reduce volatility brought by small- and medium-cap equities and excluding foreign currency exposure. And yet, there will always be risks involved with ETFs' investments, resulting in the possible loss of money")
+
+# Section 6.2 - Creating a subset of portfolios for the investor's review based on the above scores.
 # In addition to the capacity risk and tolerance risk based portfolios, cryptomix new etf and the benchmark fund will be added for further analysis:
 
 #tab 2 will display the selected portfolios and their composition (an option to select a portfolio for detailed review will be given to the investor):
