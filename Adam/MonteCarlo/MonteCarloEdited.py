@@ -139,8 +139,7 @@ class MCSimulation:
             self.calc_cumulative_return()
             
         # Use Pandas plot function to plot the return data
-        plot_title = f"{self.nSim} Simulations of Cumulative Portfolio Return Trajectories Over the Next {self.years} Years."
-        plot = self.simulated_return.multiply(self.investment_amount).hvplot.line(legend=False,title=plot_title, xlabel='Number of Trading Days', ylabel='Estimated Portfolio Value in USD').opts(yformatter='%.0f')
+        plot = self.simulated_return.multiply(self.investment_amount).hvplot.line(legend=False, xlabel='Number of Trading Days', ylabel='Estimated Portfolio Value in USD', height=300, width=600).opts(yformatter='%.0f')
         return plot
     
     def plot_distribution(self):
@@ -155,9 +154,7 @@ class MCSimulation:
         
         # Use the `plot` function to create a probability distribution histogram of simulated ending prices
         # with markings for a 95% confidence interval
-        plot_title = f"Distribution of Final Cumuluative Returns of Portfolio Across All {self.nSim} Simulations"
-        hover = HoverTool(tooltips=[('Value', '$index{($ 0.00)}'), ('Count', '@Count{00}')])
-        plt_1 = self.simulated_return.iloc[-1, :].multiply(self.investment_amount).hvplot.hist(bins=50,title=plot_title,xlabel='Portfolio Value in USD').opts(xformatter='%.0f')
+        plt_1 = self.simulated_return.iloc[-1, :].multiply(self.investment_amount).hvplot.hist(bins=100, xlabel='Portfolio Value in USD', height=300, width=600).opts(xformatter='%.0f')
         line1 = hv.VLine(self.confidence_interval.iloc[0] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
         line2 = hv.VLine(self.confidence_interval.iloc[1] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
         plt = plt_1*line1*line2
@@ -186,6 +183,6 @@ class MCSimulation:
         ci_upper = self.confidence_interval.iloc[1]
         est_return_lower = ci_lower * self.investment_amount
         est_return_upper = ci_upper * self.investment_amount
-        est_returns = [f'${est_return_lower:.2f}', f'${est_return_upper:.2f}']
+        est_returns = [est_return_lower, est_return_upper]
         return est_returns
         
