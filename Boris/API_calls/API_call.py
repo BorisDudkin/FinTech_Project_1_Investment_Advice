@@ -62,21 +62,26 @@ def get_crypto(symbols, days):
     # Start and end dates for historical data
     start_date = datetime.date.today() - datetime.timedelta(days=int(days))
     end_date = datetime.date.today() - datetime.timedelta(days=int(1))
-       
+    
+    dfs=[]   
     for symbol in symbols:
         symbol = symbol.replace("-", "")
+        symbol = rest_api.get_crypto_bars(symbol, TimeFrame.Day, start_date, end_date).df
+        symbol=symbol[symbol['exchange']=='CBSE']
+        symbol=symbol.drop('exchange', axis=1)
+        dfs.append(symbol)
         
     # Retrieve daily price data for BTC and ETH cryptocurrencies
-    BTC = rest_api.get_crypto_bars("BTCUSD", TimeFrame.Day, start_date, end_date).df
-    ETH = rest_api.get_crypto_bars("ETHUSD", TimeFrame.Day, start_date, end_date).df
+#     BTC = rest_api.get_crypto_bars("BTCUSD", TimeFrame.Day, start_date, end_date).df
+#     ETH = rest_api.get_crypto_bars("ETHUSD", TimeFrame.Day, start_date, end_date).df
     
     
-    ETH=ETH[ETH['exchange']=='CBSE']
-    BTC=BTC[BTC['exchange']=='CBSE']
+#     ETH=ETH[ETH['exchange']=='CBSE']
+#     BTC=BTC[BTC['exchange']=='CBSE']
     
-    ETH=ETH.drop('exchange', axis=1)
-    BTC=BTC.drop('exchange', axis=1)
+#     ETH=ETH.drop('exchange', axis=1)
+#     BTC=BTC.drop('exchange', axis=1)
     crypto_symbols=['BTC-USD','ETH-USD']
-    crypto_df = pd.concat([BTC, ETH], axis=1, keys=crypto_symbols)
+    crypto_df = pd.concat(dfs, axis=1, keys=crypto_symbols)
                        
     return crypto_df
