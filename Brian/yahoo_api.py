@@ -47,23 +47,23 @@ def dataframe_maker(weights):
 def historical_prices(weights_df):
     if isinstance(weights_df,pd.DataFrame): #Checks that the input is a dataframe
         tickers_list=list(weights_df.index) #Converts the index to a list
-        dataframe_list=[] #This list will hold the dataframes resulting from the api call
-        api_calls_made=0 #Creates a variable to set the number of api calls
-        for ticker in tickers_list: #For each ticker, checks if there have been less than 10 calls made and will call the api. Then, will update the number of calls. When it gets too high, the loop will stop for 100 seconds before continuing.
-            if api_calls_made<10:
-                dataframe_list.append(yahoo_api_call(ticker))
-                api_calls_made+=1
-            else:
-                time.sleep(100)
-                print("Waiting 100 seconds to avoid overloading the API")
-                dataframe_list.append(yahoo_api_call(ticker))
-                api_calls_made=1
-        df_historical=pd.concat(dataframe_list,axis=1,keys=tickers_list) #Builds the dataframe from the list
-        df_historical.dropna(how='any',inplace=True) #Removes na values
-        df_historical=df_historical[~(df_historical==0).any(axis=1)] #Removes rows with any zero values
-        return(df_historical) 
-    else:
-        print("Please input a dataframe into the historical_prices function") #This message will appear if the input is not a dataframe
+    elif isinstance(weights_df,list): #Checks that the input is a list
+        tickers_list=weights_df
+    dataframe_list=[] #This list will hold the dataframes resulting from the api call
+    api_calls_made=0 #Creates a variable to set the number of api calls
+    for ticker in tickers_list: #For each ticker, checks if there have been less than 10 calls made and will call the api. Then, will update the number of calls. When it gets too high, the loop will stop for 100 seconds before continuing.
+        if api_calls_made<10:
+            dataframe_list.append(yahoo_api_call(ticker))
+            api_calls_made+=1
+        else:
+            time.sleep(100)
+            print("Waiting 100 seconds to avoid overloading the API")
+            dataframe_list.append(yahoo_api_call(ticker))
+            api_calls_made=1
+    df_historical=pd.concat(dataframe_list,axis=1,keys=tickers_list) #Builds the dataframe from the list
+    df_historical.dropna(how='any',inplace=True) #Removes na values
+    df_historical=df_historical[~(df_historical==0).any(axis=1)] #Removes rows with any zero values
+    return(df_historical) 
         
 def weighted_returns(historical_data,weights_df):
     column_names=list(historical_data)
@@ -78,3 +78,16 @@ def weighted_returns(historical_data,weights_df):
     close_returns_df.columns=ticker_names
     weighted_returns_df=close_returns_df.dot(weights_df)
     return(weighted_returns_df)
+
+def unweighted_returns(historical_data):
+    column_names=list(historical_data)
+    close_column_names=[]
+    for tup in column_names:
+        if 'close' in tup:
+            close_column_names.append(tup)
+    ticker_names=[]
+    for tup in close_column_names:
+        ticker_names.append(tup[0])
+    close_returns_df=historical_data[close_column_names].pct_change().dropna()
+    close_returns_df.columns=ticker_names
+    return(close_returns_df)
