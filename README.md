@@ -24,30 +24,47 @@
 
 `Jupyter lab`
 
-_Prerequisites_
+_Libraries_
 
 1. `Pandas` is a Python package that provides fast, flexible, and expressive data structures designed to make working with large sets of data easy and intuitive.
 
    - [pandas](https://github.com/pandas-dev/pandas) - for the documentation, installation guide and dependencies.
 
-2. `PyViz` is a Python visualization package that provides a single platform for accessing multiple visualization libraries. One of these libraries is hvPlot. <br/>
+2. `PyViz` is a Python visualization package that provides a single platform for accessing multiple visualization libraries. The visualization libraries used in this application are listed below: <br/>
 
-   - [PyViz ](https://pyviz.org/) - for guidance on how to start visualization, interactive visualization, styles and layouts customazation.
+   - [PyViz ](https://pyviz.org/) - for guidance on how to start visualization, interactive visualization, styles and layouts customization.
    - [hvPlot ](https://hvplot.holoviz.org/) is a visualization library that is designed to work with Pandas DataFrames and that we can use to create interactive plots for our data.<br/>
+   - [Bokeh](https://bokeh.org/) - is an open source vizualization library that allows developers to create interactive plots. 
+   - [Holoviews](https://holoviews.org/) - is an open source vizualization library that allows developers to create interactive plots, designed to interact with tabular data. 
+   - [Plotly](https://plotly.com/) - is a library that allows developers to build interactive charts, tables and graphs from data.
 
 3. `SQLAlchemy` is an open-source SQL library for Python. It is designed to ease the communication between Python-based programs and databases"
 
    - [SQLAlchemy ](https://www.sqlalchemy.org/) - for information on the library, its features and installation instructions.<br/>
 
-4. `Voilà` builds interactive web applications directly from our Jupyter notebooks.
+4. `Streamlit` is a library that allows developers to build web applications with live user input.
 
-   - [Voilà ](https://voila.readthedocs.io/en/stable/) - to read more about deploying, installing and customizing<br/>
+   - [Streamlit](https://streamlit.io/) - to read more about deploying, installing and customizing.<br/>
+   
+5. `NumPy` is an open source library that adds computational tools to a project, including mathematical functions and random number generators.
 
+   - [Numpy](https://numpy.org/) - to read about available functions and installation.<br/>
+   
+6. `Python-dotenv` is a library that adds functions to read locally stored .env files.
+
+   - [python-dotenv](https://pypi.org/project/python-dotenv/) - to read about installation and usage.<br/>
+   
+7. `pytz` is a company that creates API-centered tools to trade stocks and buy cryptocurrency.
+
+   - [Alpaca](https://alpaca.markets/) - to sign up and read about installation and usage.<br/>
+   
 ---
 
 ## Installation Guide
 
-Jupyter lab is a preferred software to work with Risk Return Analysis application.<br/> Jupyter lab is a part of the **[anaconda](https://www.anaconda.com/)** distribution package and therefore it is recommended to download **anaconda** first.<br/> Once dowloaded, run the following command in your terminal to lauch Jupyter lab:
+To run this program the application must be started from the terminal using Streamlit.<br/> Once the installations below are completed, navigate to the 'Boris' folder and run the following command in your terminal to launch the program:
+
+Jupyter lab is the preferred software to work with Risk Return Analysis application.<br/> Jupyter lab is a part of the **[anaconda](https://www.anaconda.com/)** distribution package and therefore it is recommended to download **anaconda** first.<br/> Once dowloaded, run the following command in your terminal to lauch Jupyter lab:
 
 ```python
 jupyter lab
@@ -156,7 +173,8 @@ Boris Dudkin:
 - [Email](boris.dudkin@gmail.com)
 - [LinkedIn](www.linkedin.com/in/Boris-Dudkin)
 
-Add yours
+Brian Wander:
+- [Email](brianwander101@gmail.com)
 
 ---
 
