@@ -54,10 +54,13 @@ _Libraries_
 
    - [python-dotenv](https://pypi.org/project/python-dotenv/) - to read about installation and usage.<br/>
    
-7. `pytz` is a company that creates API-centered tools to trade stocks and buy cryptocurrency.
+7. `Alpaca` is a company that creates API-centered tools to trade stocks and buy cryptocurrency.
 
    - [Alpaca](https://alpaca.markets/) - to sign up and read about installation and usage.<br/>
    
+8. `pytz` is a library that adds a timezone database and functions to perform timezone calculations
+
+   - [pytz](https://pypi.org/project/pytz/) - to read about installation and usage.<br/>
 ---
 
 ## Installation Guide
