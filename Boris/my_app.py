@@ -6,12 +6,18 @@ import sys
 import os
 from dotenv import load_dotenv
 import datetime
+import time
 import alpaca_trade_api as tradeapi
 from alpaca_trade_api.rest import REST, TimeFrame
 from pathlib import Path
 
 import plotly.graph_objects as go
 import plotly.express as px
+
+import holoviews as hv
+import hvplot.pandas
+import hvplot
+from bokeh.models import HoverTool
 
 sys.path.append('..\\Brian\\')
 sys.path.append('..\\Adam\\')
@@ -196,10 +202,10 @@ tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Futur
 # Section 6.1 Introduction: 
 #tab 1 will contain an introduction:
 with tab1:
-
-    st.title('Investment Advisor')
-    
+   
     st.image('../Images/investment_bag.png',use_column_width='Auto')
+    
+    st.title('Investment Advisor')
 
     st.header('About This Application')
 
@@ -296,24 +302,9 @@ with tab2:
     st.write('**Summary Table**')
     st.table(four_portfolios_dict[portfolio_selection][-1])
 
-# This section coveres getting ready and making an API call to extract the pricing data for our selected portfolios (API call function accepts the dictionary of tickers and returns prices in the format needed for Monte carlo simulation and daily returns needed for past performance analysis):
+# Section 6.3
 
-# #create a dictionary of tickers based on the index of the four_portfolios_df dataframe:
-# tickers = list(four_portfolios_df.index)
-# portfolios_dict={}
-# for ticker in tickers:
-#     portfolios_dict[ticker]=1/len(tickers)
-
-
-# #get an input for Monte Carlo simulation (note: price data per portfolio will be created at a later stage):
-# Monte_Carlo_df=API_call['Historical prices']
-
-# #get daily pct changes for historical performance analysis:
-# daily_returns_df=API_call['Daily returns']
-
-
-
-
+# Section 6.4 Monte Carlo Simulation
 # inputs to Monte Carlo instance:
 # portfolios df: four_portfolios_df; initial investment: initial_investment; time horizon: time_horizon 
 
@@ -321,18 +312,55 @@ with tab2:
 # Monte_Carlo_df: dataframe of prices;
 # four_portfolios_df: dataframe of our selected portfolios - in the function it will be used to get weights input to Monte Carlo class;
 # portfolio: we create an instance for each portfolio and also use portfolio tickers to select price data from Monte_Carlo_df
-Monte_Carlo__list=[get_MC_input(api_call_df, four_portfolios_df, portfolio, initial_investment, time_horizon) for portfolio in four_portfolios]
+#example: first index corresponds to portfolios (0-3), second index: 0  to prices dataframe of this portfolio, 1: to weights of this portfolio
+Monte_Carlo_list=[get_MC_input(api_call_df, four_portfolios_df, portfolio) for portfolio in four_portfolios]
 
 
 #instantiating the class:
-Capacity_MC=MCSimulation(Monte_Carlo__list[0][0], Monte_Carlo__list[0][2], Monte_Carlo__list[0][1], 300, Monte_Carlo__list[0][3])
 
 # capacity_cum_returns=Capacity_MC.calc_cumulative_return()
 
 with tab3:
-    st.write(Monte_Carlo__list[3][0].tail())
-    st.write(Monte_Carlo__list[0][1])
-    st.write(Monte_Carlo__list[0][2])
-    st.write(Monte_Carlo__list[0][3])
+    st.image('../Images/Inv_growth.png',use_column_width='Auto')
+    st.write(Monte_Carlo_list[3][0].tail())
+    st.write(Monte_Carlo_list[0][1])
     st.write(daily_returns_df.head())
     st.write(daily_returns_df.tail())
+
+with tab4:
+    st.image('../Images/earning.png',use_column_width='Auto')
+    
+    st.header('Simulating future returns:')
+   
+    portfolio_selection_MC = st.selectbox("Select a portfolio for the simulation:", tuple(four_portfolios))
+    run_simulation=st.button('Run simulation?')
+    
+    portfolio_index=four_portfolios.index(portfolio_selection_MC)
+    MC_prices_df=Monte_Carlo_list[portfolio_index][0]
+    MC_weights_df=Monte_Carlo_list[portfolio_index][1]
+    num_simulation = 500
+    if run_simulation:
+        # initiate an instance of MCSimulation class
+        with st.spinner('Simulation running...'):
+            time.sleep(5)
+        st.success('View the results!!')
+        MC_instance=MCSimulation(portfolio_data=MC_prices_df, investment_amount=initial_investment, weights=MC_weights_df, num_simulation=num_simulation, years=time_horizon)
+        
+        plot = MC_instance.plot_simulation()
+        distibution = MC_instance.plot_distribution()
+        returns = MC_instance.return_amount()
+        col1,col2 =st.columns(2)
+        with col1:
+            st.subheader(f"{portfolio_selection_MC} portfolio {num_simulation} simulation runs")
+            st.bokeh_chart(hv.render(plot, backend='bokeh',use_container_width=True))
+            
+        with col2:    
+            st.subheader(f"{portfolio_selection_MC} portfolio distribution of returns based on a {time_horizon} year period and an initial investment of USD {initial_investment}")
+            st.bokeh_chart(hv.render(distibution, backend='bokeh',use_container_width=True))
+
+        st.subheader(f"{portfolio_selection_MC} portfolio estimated returns on the initial investment of {initial_investment} within the next {time_horizon} year period")
+        st.write(f'With a 95% confidence, your {portfolio_selection_MC} portfolio will return between USD **:blue[{returns[0]:.0f}]** and USD **:blue[{returns[1]:.0f}]** on your initial investment of USD **{initial_investment}** within a {time_horizon} year period.')
+
+
+    
+        
