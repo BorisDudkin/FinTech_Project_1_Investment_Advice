@@ -202,10 +202,11 @@ tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Futur
 # Section 6.1 Introduction: 
 #tab 1 will contain an introduction:
 with tab1:
-   
-    st.image('../Images/investment_bag.png',use_column_width='Auto')
-    
-    st.title('Investment Advisor')
+    col1,col2=st.columns([1,9])
+    with col1: 
+        st.image('../Images/broker.png',use_column_width='Auto')
+    with col2:
+        st.title('Investment Advisor')
 
     st.header('About This Application')
 
@@ -226,9 +227,11 @@ with tab1:
 
 with tab2:
     
-    st.image('../Images/pie-chart.png',use_column_width='Auto')
-    
-    st.header('The scores and the corresponding selected portfolios:')
+    col1,col2=st.columns([1,9])
+    with col1: 
+        st.image('../Images/pie.png',use_column_width='Auto')
+    with col2:
+        st.title('The scores and the corresponding selected portfolios:')
    
     st.subheader('Scores Assessment:')
 
@@ -258,10 +261,32 @@ with tab2:
 
     #create a dictionary that will store sector, industry, market cap name breakdown dataframes:
     four_portfolios_dict=dict(zip(four_portfolios, portfolios_info))
+    
+    #creating a plotly figure of breakdown by company/etf name for each selected portfolio and store in plotly_portfolio_figures
+    plotly_portfolio_figures=[]
+    for portfolio in four_portfolios:
+        fig_name= 'fig_name_'+portfolio
+        Name_breakdown_df = four_portfolios_dict[portfolio][sectors_mapping_df.columns.to_list().index('Name')+1].reset_index()
+        fig_name=px.pie(Name_breakdown_df, names = 'Name', values='weights',title=f'<b>{portfolio} Portfolio by Company/ETF Name<b>')
+        plotly_portfolio_figures.append(fig_name)
+    
+    #display four portfolios breakdowns by company/ETF name:
+
+    col1,col2,col3,col4 = st.columns(4)
+    
+    with col1:
+        st.plotly_chart(plotly_portfolio_figures[0],use_container_width=True)
+    with col2:
+        st.plotly_chart(plotly_portfolio_figures[1],use_container_width=True)
+    with col3:
+        st.plotly_chart(plotly_portfolio_figures[2],use_container_width=True)
+    with col4:
+        st.plotly_chart(plotly_portfolio_figures[3],use_container_width=True)
+    
 
     portfolio_selection = st.selectbox("Select the portfolio to analyze:", tuple(four_portfolios))
     
-    #get dataframes for each breakdown characteristic - sector, Industry, Name, Market Cap, based on the sectors_mapping_df (constrcuted from our mapping table):
+    #get dataframes for each breakdown characteristic - sector, Industry, Name, Market Cap, based on the sectors_mapping_df (constrcuted from our mapping table) and pull data from the dictionary by the index of the breakdown identifier (i.e. Industry). Note: total breakdown by sector is located first in the portfolios_info and therefore has an index of 0:
     sector_breakdown_df = four_portfolios_dict[portfolio_selection][0]
     Industry_breakdown_df = four_portfolios_dict[portfolio_selection][sectors_mapping_df.columns.to_list().index('Industry')+1]
     Name_breakdown_df = four_portfolios_dict[portfolio_selection][sectors_mapping_df.columns.to_list().index('Name')+1]
@@ -269,7 +294,7 @@ with tab2:
     
     #creating plotly charts for each breakdown
     Name_breakdown_df=Name_breakdown_df.reset_index()
-    fig_name_breakdown=px.pie(Name_breakdown_df, names = 'Name', values='weights',title='<b>by Company<b>')
+    fig_name_breakdown=px.pie(Name_breakdown_df, names = 'Name', values='weights',title='<b>by Company/ETF Name<b>')
     
     sector_breakdown_df=sector_breakdown_df.reset_index()
     fig_sector_breakdown=px.pie(sector_breakdown_df, names = 'Sector', values='weights',title='<b>by Sector<b>')
@@ -279,11 +304,11 @@ with tab2:
     
     Market_cap_breakdown_df=Market_cap_breakdown_df.reset_index()
     fig_market_cap_breakdown=px.pie(Market_cap_breakdown_df, names = 'Market Cap & Style', values='weights',title='<b> by Market Cap<b>')
-    
+       
     st.subheader('Portfolio Composition:')
     
     #display charts
-    st.plotly_chart(fig_name_breakdown,use_container_width=True)
+    # st.plotly_chart(fig_name_breakdown,use_container_width=True)
     
     # st.write('**Portfolio composition by**:')
     col1, col2, col3= st.columns(3)
@@ -321,16 +346,27 @@ Monte_Carlo_list=[get_MC_input(api_call_df, four_portfolios_df, portfolio) for p
 # capacity_cum_returns=Capacity_MC.calc_cumulative_return()
 
 with tab3:
-    st.image('../Images/Inv_growth.png',use_column_width='Auto')
+    
+    col1,col2=st.columns([1,9])
+    with col1:
+        st.image('../Images/Inv_growth.png',use_column_width='Auto')
+    with col2:
+        st.title('Historical Perfolrmance:')
+
     st.write(Monte_Carlo_list[3][0].tail())
     st.write(Monte_Carlo_list[0][1])
     st.write(daily_returns_df.head())
     st.write(daily_returns_df.tail())
+    st.write(four_portfolios_dict['Benchmark'][sectors_mapping_df.columns.to_list().index('Name')+1].reset_index())
+    st.plotly_chart(plotly_portfolio_figures[0],use_container_width=True)
 
 with tab4:
-    st.image('../Images/earning.png',use_column_width='Auto')
-    
-    st.header('Simulating future returns:')
+     
+    col1,col2=st.columns([1,9])
+    with col1:
+        st.image('../Images/earning.png',use_column_width='Auto')
+    with col2:
+        st.title('Simulating future returns:')
    
     portfolio_selection_MC = st.selectbox("Select a portfolio for the simulation:", tuple(four_portfolios))
     run_simulation=st.button('Run simulation?')
@@ -349,6 +385,14 @@ with tab4:
         plot = MC_instance.plot_simulation()
         distibution = MC_instance.plot_distribution()
         returns = MC_instance.return_amount()
+                
+        col1,col2 = st.columns(2)
+        with col1:
+            st.plotly_chart(plotly_portfolio_figures[portfolio_index],use_container_width=True)
+        with col2:
+            st.subheader(f"{portfolio_selection_MC} portfolio estimated returns on the initial investment of {initial_investment} within the next {time_horizon} year period")
+            st.write(f'With a 95% confidence, your {portfolio_selection_MC} portfolio will return between USD **:blue[{returns[0]:.0f}]** and USD **:blue[{returns[1]:.0f}]** on your initial investment of USD **{initial_investment}** within a {time_horizon} year period.')
+        
         col1,col2 =st.columns(2)
         with col1:
             st.subheader(f"{portfolio_selection_MC} portfolio {num_simulation} simulation runs")
@@ -357,9 +401,6 @@ with tab4:
         with col2:    
             st.subheader(f"{portfolio_selection_MC} portfolio distribution of returns based on a {time_horizon} year period and an initial investment of USD {initial_investment}")
             st.bokeh_chart(hv.render(distibution, backend='bokeh',use_container_width=True))
-
-        st.subheader(f"{portfolio_selection_MC} portfolio estimated returns on the initial investment of {initial_investment} within the next {time_horizon} year period")
-        st.write(f'With a 95% confidence, your {portfolio_selection_MC} portfolio will return between USD **:blue[{returns[0]:.0f}]** and USD **:blue[{returns[1]:.0f}]** on your initial investment of USD **{initial_investment}** within a {time_horizon} year period.')
 
 
     
