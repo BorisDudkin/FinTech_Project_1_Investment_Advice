@@ -139,7 +139,7 @@ class MCSimulation:
             self.calc_cumulative_return()
             
         # Use Pandas plot function to plot the return data
-        plot = self.simulated_return.multiply(self.investment_amount).hvplot.line(legend=False, xlabel='Number of Trading Days', ylabel='Estimated Portfolio Value in USD', height=300, width=600).opts(yformatter='%.0f')
+        plot = self.simulated_return.multiply(self.investment_amount).hvplot.line(legend=False, xlabel='Number of Trading Days', ylabel='Estimated Portfolio Value in USD', height=300, width=350).opts(xformatter='%.0f', yformatter='%.0f')
         return plot
     
     def plot_distribution(self):
@@ -154,7 +154,7 @@ class MCSimulation:
         
         # Use the `plot` function to create a probability distribution histogram of simulated ending prices
         # with markings for a 95% confidence interval
-        plt_1 = self.simulated_return.iloc[-1, :].multiply(self.investment_amount).hvplot.hist(bins=100, xlabel='Portfolio Value in USD', height=300, width=600).opts(xformatter='%.0f')
+        plt_1 = self.simulated_return.iloc[-1, :].multiply(self.investment_amount).hvplot.kde(xlabel='Portfolio Value in USD', height=300, width=350).opts(xformatter='%.0f', yformatter='%.0f')
         line1 = hv.VLine(self.confidence_interval.iloc[0] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
         line2 = hv.VLine(self.confidence_interval.iloc[1] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
         plt = plt_1*line1*line2

@@ -45,7 +45,6 @@ def dataframe_maker(weights):
     return({'Historical prices':df_historical,'Historical close prices':close_df,'Daily returns':daily_returns,'Weighted daily returns':weighted_daily_returns})
     
 def historical_prices(weights_df):
-    time.sleep(100)
     if isinstance(weights_df,pd.DataFrame): #Checks that the input is a dataframe
         tickers_list=list(weights_df.index) #Converts the index to a list
     elif isinstance(weights_df,list): #Checks that the input is a list
