@@ -204,7 +204,7 @@ Furthermore, Streamlit library transforms Investment Advisor into an interactive
   ![historical_performance](Images/historical_performance.PNG)<br/>
 - A Monte Carlo simulation can be run on each portfolio selected, and the estimated returns will be displayed:<br/>
   ![simulation_1](Images/simulation_1.PNG)<br/>
-  ![simulation_2](images/simulation_2.PNG)<br/>
+  ![simulation_2](Images/simulation_2.PNG)<br/>
 
 
 
