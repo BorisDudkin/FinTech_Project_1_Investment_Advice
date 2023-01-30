@@ -3,7 +3,8 @@ import pandas as pd
 import numpy as np
 
 
-def get_historical_analysis(daily_returns_df, portfolios_df):
+def get_historical_analysis(daily_returns_df, portfolios_df, trading_days):
+    trading_days = 252
     #this might not be needed later
     symbols = list(portfolios_df.index)
 
@@ -12,19 +13,12 @@ def get_historical_analysis(daily_returns_df, portfolios_df):
 
     #number of observations:
     n_days=len(daily_returns_df.index)
-    years=round(n_days/252)
-    
-#     # select period for analysis:
-#     if n_days>=252*3:
-#         years=3
-#     elif n_days>=252*2 and n_days<252*3:
-#         years=2
-#     else:
-#         years=1
-#     n_days=252*years
+    years=int(round(n_days/trading_days))
+    #adjust n_days to exct number of years
+    n_days_analysis=years*trading_days
 
-#     # select defined above historical data data:
-#     daily_returns_df=daily_returns_df.iloc[-n_days:,:]
+#     # select dataframe for exact number of years:
+    daily_returns_df=daily_returns_df.iloc[-n_days_analysis:,:]
 
 
     # Calculate the cumulative returns for all assets in our portfolios
@@ -41,7 +35,7 @@ def get_historical_analysis(daily_returns_df, portfolios_df):
     returns_list=[]
     col_list=[]
     for i in range(1, years+1):
-        weighted_returns=weighted_returns_portfolio.iloc[-i*252:,:]
+        weighted_returns=weighted_returns_portfolio.iloc[-i*trading_days:,:]
         cum_returns_portfolios =  (1 + weighted_returns).cumprod()
         df=(cum_returns_portfolios.iloc[-1,:]-1)*100
         returns=str(i)+'Y Returns in %'
@@ -62,7 +56,7 @@ def get_historical_analysis(daily_returns_df, portfolios_df):
     standard_deviation = weighted_returns_portfolio.std()
 
     # Calculate and sort the annualized standard deviation (252 trading days) of the 4 portfolios
-    trading_days = 252
+    
     annualized_standard_deviation = standard_deviation * np.sqrt(trading_days)
 
     # Calculate the annual average return data for the for fund portfolios

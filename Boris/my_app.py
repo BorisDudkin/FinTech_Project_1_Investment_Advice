@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import sqlalchemy
 import streamlit as st
@@ -25,7 +26,7 @@ sys.path.append('..\\Adam\\')
 from Score_calculator.questionnaire_st import get_bucket
 from Sector_name.sector_industry import get_sector_industry_weights
 from Portfolio_analysis.historical_analysis import get_historical_analysis
-from Static_data.static_data import step, capacity_questions, n_days, timeframe
+from Static_data.static_data import step, capacity_questions, n_days, timeframe, num_sim, trading_days
 from Monte_Carlo.monte_carlo_input import get_MC_input
 # from API_calls.API_calls import get_api_data
 from MonteCarlo.MonteCarloEdited import MCSimulation
@@ -210,15 +211,15 @@ with tab1:
 
     st.header('About This Application')
 
-    my_text = "The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorb risk. Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering. Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stock. To increase clients' awareness of our new Crypto mix ETF, we will include the comparison performance of this fund too."
+    my_text = "The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorbe risk. Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering. Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stock. To increase clients' awareness of our new Crypto mix ETF, we will include the comparison performance of this fund too."
 
     st.write(my_text)
 
     with st.expander("About Us"):
-        st.write("We offer our clients a tailored approach to constructing an investment portfolio based on their risk tolerance and personal cicumstances to absorb the risk arising from the investment activities.")
+        st.write("We offer our clients a tailored approach to constructing an investment portfolio based on their risk tolerance and personal cicumstances to absorbe the risk arising from the investment activities.")
 
     with st.expander("Funds Description and Risk profile"):
-        st.write("Assets in our funds range from High Growth and Crypto to Value stocks and Fixed Income securities of Long term and Short-term maturities. Each fund is constructed with the risk profile of an investor in mind. Our funds are non-diversified and may experience greater volatility than more diversified investments. To compensate for the limited diversification, we only offer Large Cap US equities and Domestic stocks and bonds to reduce volatility brought by small- and medium-cap equities and excluding foreign currency exposure. And yet, there will always be risks involved with ETFs' investments, resulting in the possible loss of money.")
+        st.write("Assets in our funds range from High Growth and Crypto to Value stocks and Fixed Income securities of Long term and Short-term maturities. Each fund is constructed with the risk profile of an investor in mind. Our funds are non-diversified and may experience greater volatility than more diversified investments. To compensate for the limited diversification, we only offer Large Cap US equities and Domestic stocks and bonds to reduce volatility brought by small- and medium-cap equities and excluding foreign currency exposure. And yet, there will always be risks involved with ETFs' investments, resulting in the possible loss of money")
 
 # Section 6.2 - Creating a subset of portfolios for the investor's review based on the above scores.
 # In addition to the capacity risk and tolerance risk based portfolios, cryptomix new etf and the benchmark fund will be added for further analysis:
@@ -235,7 +236,7 @@ with tab2:
    
     st.subheader('Scores Assessment:')
 
-    st.write(f'With the risk scores progressing from the most conservative (score 0) to the highest risk (score 1) you scored **:blue[{capacity_score}]** on your _capacity to absorb risk_ and **:blue[{tolerance_score}]** on your _risk tolerance_')
+    st.write(f'With the risk scores progressing from the most conservative (score 0) to the highest risk (score 1) you scored **:blue[{capacity_score}]** on your _capacity to absorbe risk_ and **:blue[{tolerance_score}]** on your _risk tolerance_')
     st.write("Based on these scores, we created **:blue[Risk Capacity]** and **:blue[Risk Tolerance]** portfolios. To provide a **:blue[Benchmark]**, we included our 40/60 bonds to stocks traditional portfolio in our analysis.")
     st.write("Finally, a new Crypto enhanced portfolio **:blue[Cryptomix]** will help investors analyse how an addition of digital assets can affect the portfolio performance")
 
@@ -331,7 +332,7 @@ with tab2:
 
 # Call historical_analysis function to get 1-3y returns and Sharpe Ratio, Cumulative rturns per asset and per portfolio:
 
-summary_df, cum_returns_portfolios_df, cum_returns_assets_df, n_years=get_historical_analysis(daily_returns_df, four_portfolios_df)
+summary_df, cum_returns_portfolios_df, cum_returns_assets_df, n_years=get_historical_analysis(daily_returns_df, four_portfolios_df, trading_days)
 summary_df = summary_df.applymap("{0:.2f}".format)
 
 fig_returns_portfolio=px.line(cum_returns_portfolios_df, y= cum_returns_portfolios_df.columns,title=f'<b>{n_years}-year cumulative returns by portfolio</b>')
@@ -388,29 +389,6 @@ with tab3:
 #example: first index corresponds to portfolios (0-3), second index: 0  to prices dataframe of this portfolio, 1: to weights of this portfolio
 Monte_Carlo_list=[get_MC_input(api_call_df, four_portfolios_df, portfolio) for portfolio in four_portfolios]
 
-<<<<<<< HEAD
-=======
-
-#instantiating the class:
-
-# capacity_cum_returns=Capacity_MC.calc_cumulative_return()
-
-with tab3:
-    
-    col1,col2=st.columns([1,9])
-    with col1:
-        st.image('../Images/Inv_growth.png',use_column_width='Auto')
-    with col2:
-        st.title('Historical Performance:')
-
-    st.write(Monte_Carlo_list[3][0].tail())
-    st.write(Monte_Carlo_list[0][1])
-    st.write(daily_returns_df.head())
-    st.write(daily_returns_df.tail())
-    st.write(four_portfolios_dict['Benchmark'][sectors_mapping_df.columns.to_list().index('Name')+1].reset_index())
-    st.plotly_chart(plotly_portfolio_figures[0],use_container_width=True)
-
->>>>>>> a559f68ab1609ecd1b32225b30c0bf0cf3bd7f47
 with tab4:
      
     col1,col2=st.columns([1,9])
@@ -425,7 +403,7 @@ with tab4:
     portfolio_index=four_portfolios.index(portfolio_selection_MC)
     MC_prices_df=Monte_Carlo_list[portfolio_index][0]
     MC_weights_df=Monte_Carlo_list[portfolio_index][1]
-    num_simulation = 500
+    num_simulation = num_sim
     if run_simulation:
         # initiate an instance of MCSimulation class
         with st.spinner('Simulation running...'):

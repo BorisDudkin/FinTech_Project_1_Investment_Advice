@@ -7,3 +7,9 @@ capacity_questions=['Q1_Capacity','Q2_Capacity','Q3_Capacity','Q4_Capacity','Q5_
 #timeframe and number of days for historical data API retrieval:
 n_days=1200
 timeframe='1Day'
+
+#number of Monte Carlo simulations 
+num_sim = 500
+
+#number of trading days i a year
+trading_days=252
