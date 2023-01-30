@@ -9,7 +9,7 @@ def get_historical_analysis(daily_returns_df, portfolios_df, trading_days):
     symbols = list(portfolios_df.index)
     
     #clean the data for stock splits by removing 100% changes
-    daily_returns_df[daily_returns_df<=-0.5]=0
+    # daily_returns_df[daily_returns_df<=-0.5]=0
 
     # construct prices only for assets in our portfolios dataframe:
     daily_returns_df=daily_returns_df.loc[:,symbols]

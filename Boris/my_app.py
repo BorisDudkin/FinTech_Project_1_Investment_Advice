@@ -59,7 +59,8 @@ alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
 # Then, next time the function is called, if the function nae, its body and parameters have not changed Streamlit knows it can skip executing the function altogether. 
 # Instead, it just reads the output from the local cache and passes it on to the caller.
 # Call api to fetch market data
-@st.cache(allow_output_mutation=True)
+# @st.cache(allow_output_mutation=True)
+@st.cache
 def get_api_data(tickers, days, timeframe='1Day'):
    
     #separate crypto and non-crypto tickers:
@@ -133,7 +134,10 @@ def get_api_data(tickers, days, timeframe='1Day'):
         closing_prices_df[ticker] = total_df[ticker]['close']
     
     #construct daily returns that will be used in the historical analysiss:
+    # clean for NA
     daily_returns_df=closing_prices_df.pct_change().dropna()
+    #cleanse for stocks split 1:2 and above
+    daily_returns_df[daily_returns_df<=-0.5]=0
     
     return (total_df, daily_returns_df)
 
