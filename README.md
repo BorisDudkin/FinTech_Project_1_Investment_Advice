@@ -65,7 +65,7 @@ _Libraries_
 
 ## Installation Guide
 
-To run this program the application must be started from the terminal using Streamlit.<br/> Once the installations below are completed, navigate to the 'Boris' folder and run the following command in your terminal to launch the program:
+To run this program the application must be started from the terminal using Streamlit.<br/> A .env file must also be written and stored in the local directory before running the program according to the instructions below.<br/> Once the installations below are completed and the env file has been made, navigate to the 'Boris' folder and run the following command in your terminal to launch the program:
 
 ```python
 streamlit run my_app.py
@@ -76,7 +76,16 @@ Jupyter lab is the preferred software to work with this application.<br/> Jupyte
 ```python
 jupyter lab
 ```
+### Creating the .env file
+To create the .env file, open a .txt document and type in your keys from the Alpaca dashboard after creating an account in the following format:
 
+![env](Images/env.PNG)
+
+Rename the text file to .env and save the file to the 'Boris' Directory after selecting 'All Files':
+
+![env_save](Images/env_save.PNG)
+
+### Library Installations
 Before using the application first install the following dependencies by using your terminal:
 
 To install pandas run:
