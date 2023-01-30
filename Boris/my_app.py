@@ -25,6 +25,7 @@ sys.path.append('..\\Adam\\')
 # import math
 from Score_calculator.questionnaire_st import get_bucket
 from Sector_name.sector_industry import get_sector_industry_weights
+from Portfolio_analysis.historical_analysis import get_historical_analysis
 from Static_data.static_data import step, capacity_questions, n_days, timeframe
 from Monte_Carlo.monte_carlo_input import get_MC_input
 # from API_calls.API_calls import get_api_data
@@ -249,7 +250,7 @@ with tab2:
 
     st.subheader('Selected portfolios including the new Cryptomix portfolio and the Benchmark:')
 
-    # create dataframe to store selectd portfolios + benchmark + cryptomix portfolio
+    # create dataframe four_portfolios_df to store selectd portfolios + benchmark + cryptomix portfolio
     four_portfolios_df= pd.concat(portfolios_list, axis=1, ignore_index=False)
     four_portfolios_df.columns = four_portfolios
     four_portfolios_df=four_portfolios_df.loc[(four_portfolios_df!=0).any(axis=1)]
@@ -327,7 +328,55 @@ with tab2:
     st.write('**Summary Table**')
     st.table(four_portfolios_dict[portfolio_selection][-1])
 
-# Section 6.3
+# Section 6.3 Historical analysis:
+
+# Call historical_analysis function to get 1-3y returns and Sharpe Ratio, Cumulative rturns per asset and per portfolio:
+
+summary_df, cum_returns_portfolios_df, cum_returns_assets_df, n_years=get_historical_analysis(daily_returns_df, four_portfolios_df)
+summary_df = summary_df.applymap("{0:.2f}".format)
+
+fig_returns_portfolio=px.line(cum_returns_portfolios_df, y= cum_returns_portfolios_df.columns,title=f'<b>{n_years}-year cumulative returns by portfolio</b>')
+fig_returns_portfolio.update_xaxes(rangeslider_visible=True)
+fig_returns_portfolio.update_layout(xaxis_range=[list(cum_returns_portfolios_df.index)[0],list(cum_returns_portfolios_df.index)[-1]], showlegend=True, title={'x' : 0.5}, yaxis_title="Cumulative Returns")
+
+fig_returns_assets=px.line(cum_returns_assets_df, y= cum_returns_assets_df.columns,title=f'<b>{n_years}-year cumulative returns by underlying asset</b>')
+fig_returns_assets.update_xaxes(rangeslider_visible=True)
+fig_returns_assets.update_layout(xaxis_range=[list(cum_returns_assets_df.index)[0],list(cum_returns_assets_df.index)[-1]], showlegend=True, title={'x' : 0.5}, yaxis_title="Cumulative Returns", legend=dict(orientation="h",))
+
+with tab3:
+    
+    col1,col2=st.columns([1,9])
+    with col1:
+        st.image('../Images/Inv_growth.png',use_column_width='Auto')
+    with col2:
+        st.title('Historical Perfolrmance:')
+        
+#     st.header(f'{n_years}-year underlying securities cumulative returns')
+#     st.line_chart(cum_returns_assets_df)
+    st.header('Performance of the underlying assets')
+    st.plotly_chart(fig_returns_assets,use_container_width=True)
+    
+    st.header('Selected portfolios overview')
+    col1,col2,col3,col4 = st.columns(4)
+    
+    with col1:
+        st.plotly_chart(plotly_portfolio_figures[0],use_container_width=True)
+    with col2:
+        st.plotly_chart(plotly_portfolio_figures[1],use_container_width=True)
+    with col3:
+        st.plotly_chart(plotly_portfolio_figures[2],use_container_width=True)
+    with col4:
+        st.plotly_chart(plotly_portfolio_figures[3],use_container_width=True)
+        
+        
+    st.header('Yearly returns and Sharpe-Ratio by portfolio')   
+    st.dataframe(summary_df.style.highlight_max(axis=0),use_container_width=True)
+    
+    st.header('Performance of the portfolios')
+    st.plotly_chart(fig_returns_portfolio,use_container_width=True)
+    # st.header(f'{n_years}-year portfolios cumulative returns')
+    # st.line_chart(cum_returns_portfolios_df)
+                                                
 
 # Section 6.4 Monte Carlo Simulation
 # inputs to Monte Carlo instance:
@@ -339,26 +388,6 @@ with tab2:
 # portfolio: we create an instance for each portfolio and also use portfolio tickers to select price data from Monte_Carlo_df
 #example: first index corresponds to portfolios (0-3), second index: 0  to prices dataframe of this portfolio, 1: to weights of this portfolio
 Monte_Carlo_list=[get_MC_input(api_call_df, four_portfolios_df, portfolio) for portfolio in four_portfolios]
-
-
-#instantiating the class:
-
-# capacity_cum_returns=Capacity_MC.calc_cumulative_return()
-
-with tab3:
-    
-    col1,col2=st.columns([1,9])
-    with col1:
-        st.image('../Images/Inv_growth.png',use_column_width='Auto')
-    with col2:
-        st.title('Historical Perfolrmance:')
-
-    st.write(Monte_Carlo_list[3][0].tail())
-    st.write(Monte_Carlo_list[0][1])
-    st.write(daily_returns_df.head())
-    st.write(daily_returns_df.tail())
-    st.write(four_portfolios_dict['Benchmark'][sectors_mapping_df.columns.to_list().index('Name')+1].reset_index())
-    st.plotly_chart(plotly_portfolio_figures[0],use_container_width=True)
 
 with tab4:
      
@@ -386,10 +415,10 @@ with tab4:
         distibution = MC_instance.plot_distribution()
         returns = MC_instance.return_amount()
                 
-        col1,col2 = st.columns(2)
-        with col1:
+        bycompany,description = st.columns([1,2])
+        with bycompany:
             st.plotly_chart(plotly_portfolio_figures[portfolio_index],use_container_width=True)
-        with col2:
+        with description:
             st.subheader(f"{portfolio_selection_MC} portfolio estimated returns on the initial investment of {initial_investment} within the next {time_horizon} year period")
             st.write(f'With a 95% confidence, your {portfolio_selection_MC} portfolio will return between USD **:blue[{returns[0]:.0f}]** and USD **:blue[{returns[1]:.0f}]** on your initial investment of USD **{initial_investment}** within a {time_horizon} year period.')
         
