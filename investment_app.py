@@ -11,8 +11,6 @@ from alpaca_trade_api.rest import REST, TimeFrame
 from pathlib import Path
 import plotly.graph_objects as go
 import plotly.express as px
-import holoviews as hv
-import hvplot
 
 
 sys.path.append('.\\Brian\\')
@@ -20,13 +18,13 @@ sys.path.append('.\\Adam\\')
 sys.path.append('.\\Boris\\')
 
 # import math
-from Score_calculator.questionnaire_st import get_bucket
-from Sector_name.sector_industry import get_sector_industry_weights
-from Portfolio_analysis.historical_analysis import get_historical_analysis
-from Static_data.static_data import step, capacity_questions, n_days, timeframe, num_sim, trading_days
-from Monte_Carlo.monte_carlo_input import get_MC_input
+from Boris.Score_calculator.questionnaire_st import get_bucket
+from Boris.Sector_name.sector_industry import get_sector_industry_weights
+from Boris.Portfolio_analysis.historical_analysis import get_historical_analysis
+from Boris.Static_data.static_data import step, capacity_questions, n_days, timeframe, num_sim, trading_days
+from Boris.Monte_Carlo.monte_carlo_input import get_MC_input
 # from API_calls.API_calls import get_api_data
-from MonteCarlo.MonteCarloEdited import MCSimulation
+from Adam.MonteCarlo.MonteCarloEdited import MCSimulation
 
 #create internet page name
 st.set_page_config(page_title="Investment Advisor", layout='wide')
@@ -216,7 +214,7 @@ tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Futur
 with tab1:
     col1,col2=st.columns([1,9])
     with col1: 
-        st.image('../Images/broker.png',width=85)
+        st.image('Images/broker.png',width=85)
     with col2:
         st.title('Investment Advisor Application')
 
@@ -241,7 +239,7 @@ with tab2:
     
     col1,col2=st.columns([1,9])
     with col1: 
-        st.image('../Images/pie.png', width=85)
+        st.image('Images/pie.png', width=85)
     with col2:
         st.title('The Scores and their Corresponding Selected Portfolios')
    
@@ -358,7 +356,7 @@ with tab3:
     
     col1,col2=st.columns([1,9])
     with col1:
-        st.image('../Images/Inv_growth.png', width=85)
+        st.image('Images/Inv_growth.png', width=85)
     with col2:
         st.title('Historical Performance')
         
@@ -410,7 +408,7 @@ with tab4:
      
     col1,col2=st.columns([1,9])
     with col1:
-        st.image('../Images/earning.png', width=85)
+        st.image('Images/earning.png', width=85)
     with col2:
         st.title('Simulating Future Returns')
 
@@ -448,14 +446,16 @@ with tab4:
         with description:
             st.subheader(f"{portfolio_selection_MC} Estimated Returns:")
             st.subheader(f'With a 95% confidence, an initial investment of _${initial_investment}_ over the course of _{time_horizon} years_ will result in your {portfolio_selection_MC} having an estimated return value between **:blue[{returns[0]:.2f}]** and **:blue[{returns[1]:.2f}]** USD.')
-        col1,col2 =st.columns(2)
-        with col1:
-            st.subheader(f"{portfolio_selection_MC} Portfolio based on {num_simulation} Simulations:")
-            st.bokeh_chart(hv.render(plot, backend='bokeh',use_container_width=True))
-            
-        with col2:    
-            st.subheader(f"{portfolio_selection_MC} Portfolio Distribution of Returns:")
-            st.bokeh_chart(hv.render(distibution, backend='bokeh',use_container_width=True))
+    
+        st.subheader(f"{portfolio_selection_MC} Portfolio based on {num_simulation} Simulations:")
+        st.plotly_chart(plot, use_container_width=True)
+        st.caption(f'A line chart representing {num_simulation} simulations over {time_horizon} years.')
+        
+        st.title('\n')
+
+        st.subheader(f"{portfolio_selection_MC} Portfolio Distribution of Returns:")
+        st.plotly_chart(distibution, use_container_width=True)
+        st.caption(f'A histogram representing the spread of {num_simulation} estimated portfolio returns over {time_horizon} years.')
 
 
     
