@@ -67,7 +67,11 @@ _Libraries_
 
 To run this program the application must be started from the terminal using Streamlit.<br/> Once the installations below are completed, navigate to the 'Boris' folder and run the following command in your terminal to launch the program:
 
-Jupyter lab is the preferred software to work with Risk Return Analysis application.<br/> Jupyter lab is a part of the **[anaconda](https://www.anaconda.com/)** distribution package and therefore it is recommended to download **anaconda** first.<br/> Once dowloaded, run the following command in your terminal to lauch Jupyter lab:
+```python
+streamlit run my_app.py
+```
+
+Jupyter lab is the preferred software to work with this application.<br/> Jupyter lab is a part of the **[anaconda](https://www.anaconda.com/)** distribution package and therefore it is recommended to download **anaconda** first.<br/> Once downloaded, run the following command in your terminal to launch Jupyter lab:
 
 ```python
 jupyter lab
@@ -78,7 +82,6 @@ Before using the application first install the following dependencies by using y
 To install pandas run:
 
 ```python
-#  PuPi
 pip install pandas
 ```
 
@@ -87,14 +90,14 @@ pip install pandas
 conda install pandas
 ```
 
-To install PyViz, in Terminal run:
+To install the PyViz visualizations, in Terminal run:
 
 ```python
 # conda
-conda install -c pyviz hvplot geoviews
+conda install -c pyviz hvplot bokeh holoviews plotly
 ```
 
-Confirm the installation of all the PyViz packages by running the following commands in Terminal type:
+Confirm the installation of all the PyViz packages by running the following commands in Terminal:
 
 ```python
  conda list hvplot
@@ -103,29 +106,74 @@ Confirm the installation of all the PyViz packages by running the following comm
 To install SQLAlchemy, in Terminal run:
 
 ```python
-# PuPi
 pip install SQLAlchemy
 ```
 
-Confirm the installation of the SQLAlchemy package by running the following commands in Terminal type:
+Confirm the installation of the SQLAlchemy package by running the following commands in Terminal:
 
 ```python
  conda list sqlalchemy
 ```
 
-To install Voilà, in Terminal run:
+To install Streamlit, in Terminal run:
 
 ```python
-# PuPi
-pip install voila
+pip install streamlit
 ```
 
-Confirm the installation of the Voilà package by running the following commands in Terminal type:
+Confirm the installation of the Streamlit package by running the following commands in Terminal:
 
 ```python
- conda list voila
+ conda list streamlit
 ```
 
+To install python-dotenv, in Terminal run:
+
+```python
+pip install python-dotenv
+```
+
+Confirm the installation of the python-dotenv package by running the following commands in Terminal:
+
+```python
+ conda list python-dotenv
+```
+
+To install numpy, in Terminal run:
+
+```python
+pip install numpy
+```
+
+Confirm the installation of the numpy package by running the following commands in Terminal:
+
+```python
+ conda list numpy
+```
+
+To install the Alpaca Trade API, in Terminal run:
+
+```python
+pip3 install alpaca-trade-api
+```
+
+Confirm the installation of the Alpaca Trade API package by running the following command in Terminal:
+
+```python
+ conda list alpaca-trade-api
+```
+
+To install pytz, in Terminal run:
+
+```python
+pip install pytz
+```
+
+Confirm the installation of the pytz package by running the following command in Terminal:
+
+```python
+ conda list pytz
+```
 ---
 
 ## Usage
