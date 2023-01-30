@@ -1,6 +1,6 @@
 # Investment Advisor
 
-### The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorb risk. Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering. Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stock. To increase clients' awareness of our new Digital Assets enhanced portfolio, we will include the comparison performance of this fund too.
+### The Investment Advisor was developed to help empower potential investors by providing portfolio suggestions from just a few questions about income and attitude towards investment.The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorb risk. Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering. A third 'Cryptomix' portfolio including cryptocurrency assets will also be included. Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stocks.
 
 ---
 
@@ -205,6 +205,10 @@ Furthermore, Streamlit library transforms Investment Advisor into an interactive
 - A Monte Carlo simulation can be run on each portfolio selected, and the estimated returns will be displayed:<br/>
   ![simulation_1](Images/simulation_1.PNG)<br/>
   ![simulation_2](Images/simulation_2.PNG)<br/>
+
+
+
+https://user-images.githubusercontent.com/118786747/215371133-e1c822cd-d054-4f2e-80d0-c34880016df5.mp4
 
 
 
