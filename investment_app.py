@@ -448,7 +448,7 @@ with tab4:
             st.plotly_chart(plotly_portfolio_figures[portfolio_index],use_container_width=True)
         with description:
             st.subheader(f"{portfolio_selection_MC} Estimated Returns:")
-            st.markdown(f'With a 95% confidence, an initial investment of _${initial_investment}_ over the course of _{time_horizon} years_ will result in your {portfolio_selection_MC} having an estimated return value between **:blue[{returns[0]:.2f}]** and **:blue[{returns[1]:.2f}]** USD.')
+            st.markdown(f'With a 95% confidence, an initial investment of _${initial_investment}_ over the course of _{time_horizon} years_ will result in your {portfolio_selection_MC} portfolio having an estimated return value between **:blue[{returns[0]:.2f}]** and **:blue[{returns[1]:.2f}]** USD.')
             st.warning("_**Disclaimer:**_ These results are not guaranteed but rather an estimate based on the assumption of normal distribution, which quantifies risk and return by the mean for returns and standard deviation for risk. Outcome is based on random number algorithm and may not render consistent results.")
 
         st.subheader(f"{portfolio_selection_MC} Portfolio based on {num_simulation} Simulations:")
