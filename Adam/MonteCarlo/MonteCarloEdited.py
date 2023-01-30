@@ -10,6 +10,7 @@ import hvplot.pandas
 import pandas as pd
 import hvplot
 from bokeh.models import HoverTool
+import plotly.express as px
 
 class MCSimulation:
     """
@@ -138,8 +139,8 @@ class MCSimulation:
         if not isinstance(self.simulated_return,pd.DataFrame):
             self.calc_cumulative_return()
             
-        # Use Pandas plot function to plot the return data
-        plot = self.simulated_return.multiply(self.investment_amount).hvplot.line(legend=False, xlabel='Number of Trading Days', ylabel='Estimated Portfolio Value in USD', height=300, width=350).opts(xformatter='%.0f', yformatter='%.0f')
+        # Use Plotly plot function to plot the return data
+        plot = px.line(self.simulated_return.multiply(self.investment_amount), labels={'index':'Number of Trading Days', 'value':'Estimated Portfolio Value in USD', 'variable':'Sim Number'})
         return plot
     
     def plot_distribution(self):
@@ -154,10 +155,11 @@ class MCSimulation:
         
         # Use the `plot` function to create a probability distribution histogram of simulated ending prices
         # with markings for a 95% confidence interval
-        plt_1 = self.simulated_return.iloc[-1, :].multiply(self.investment_amount).hvplot.kde(xlabel='Portfolio Value in USD', height=300, width=350).opts(xformatter='%.0f', yformatter='%.0f')
-        line1 = hv.VLine(self.confidence_interval.iloc[0] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
-        line2 = hv.VLine(self.confidence_interval.iloc[1] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
-        plt = plt_1*line1*line2
+        # plt_1 = self.simulated_return.iloc[-1, :].multiply(self.investment_amount).hvplot.kde(xlabel='Portfolio Value in USD', height=300, width=350).opts(xformatter='%.0f', yformatter='%.0f')
+        # line1 = hv.VLine(self.confidence_interval.iloc[0] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
+        # line2 = hv.VLine(self.confidence_interval.iloc[1] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
+        # plt = plt_1*line1*line2
+        plt = px.histogram(self.simulated_return.iloc[-1, :].multiply(self.investment_amount), marginal='box', histnorm = 'percent', labels={'count':'Frequency', 'variable':'Number of Trading Days', 'value':'Estimated Portfolio Value in USD'}, nbins=50)
         return plt
     
     def summarize_cumulative_return(self):
