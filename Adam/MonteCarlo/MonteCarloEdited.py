@@ -91,6 +91,10 @@ class MCSimulation:
         
         # Calculate the mean and standard deviation of daily returns for each stock
         daily_returns = self.portfolio_data.xs('daily_return',level=1,axis=1)
+
+        #Drops any days where there was a difference greater than 50% in stock price (share splitting)
+        daily_returns[daily_returns<=-0.5]=0
+
         mean_returns = daily_returns.mean().tolist()
         std_returns = daily_returns.std().tolist()
         
@@ -159,7 +163,7 @@ class MCSimulation:
         # line1 = hv.VLine(self.confidence_interval.iloc[0] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
         # line2 = hv.VLine(self.confidence_interval.iloc[1] * self.investment_amount).opts(color='red', line_dash='dashed', line_width=2)
         # plt = plt_1*line1*line2
-        plt = px.histogram(self.simulated_return.iloc[-1, :].multiply(self.investment_amount), marginal='box', histnorm = 'percent', labels={'count':'Frequency', 'variable':'Number of Trading Days', 'value':'Estimated Portfolio Value in USD'}, nbins=50)
+        plt = px.histogram(self.simulated_return.iloc[-1, :].multiply(self.investment_amount), marginal='box', histnorm = 'percent', labels={'count':'Frequency', 'variable':'Number of Trading Days', 'value':'Estimated Portfolio Value in USD'}, nbins=100)
         return plt
     
     def summarize_cumulative_return(self):
