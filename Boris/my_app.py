@@ -34,14 +34,19 @@ from MonteCarlo.MonteCarloEdited import MCSimulation
 #create internet page name
 st.set_page_config(page_title="Investment Advisor 💰", layout='wide')
 
-# Section 1: Establishing database connection for extracting data:
+# Section 1: establishing connections for getting data
+
+# Section 1.1: establishing connections for getting DB stored position data (questionnaires and risk weights, portfolios, sector/industry mappings)
+
 # 1) Create Database connection string to a database where questionnaires, weights, portfolios and securitiy deail tables are stored (position data)
 database_connection_string = 'sqlite:///Resources/investor.db'
 
 # 2) Create an engine to interact with the database
 engine = sqlalchemy.create_engine(database_connection_string)
 
-# Section 2: Create a set up for ALPACA API Calls:
+# Section 1.2: establishing connections for getting market data (prices of the underlying scurities)
+
+#Create a set up for ALPACA API Calls:
 # Load .env file
 load_dotenv()
 
@@ -87,7 +92,9 @@ def get_api_data(tickers, days, timeframe='1Day'):
         end=end_date
     ).df
     
+    #resetting the index for merging with crypto later in the function:
     portfolio_prices_df.index=portfolio_prices_df.index.date
+    
     # For the new closing_prices_df DataFrame, keep only the date component
     # portfolio_prices_df.index = portfolio_prices_df.index.date
     # Reorganize the DataFrame to have a MultiIndex.
@@ -111,6 +118,8 @@ def get_api_data(tickers, days, timeframe='1Day'):
         dfs.append(symbol)
     
     crypto_df = pd.concat(dfs, axis=1, keys=crypto_tickers)
+    
+    #resetting the index for merging with stocks/bonds later in the function:
     crypto_df.index=crypto_df.index.date
     
     # merge non-crypto and crypto parts to generate df that will be used for Monte Carlo simulation:
@@ -122,18 +131,21 @@ def get_api_data(tickers, days, timeframe='1Day'):
     closing_prices_df = pd.DataFrame()
     for ticker in tickers:
         closing_prices_df[ticker] = total_df[ticker]['close']
+    
     #construct daily returns that will be used in the historical analysiss:
     daily_returns_df=closing_prices_df.pct_change().dropna()
     
     return (total_df, daily_returns_df)
 
+# Section 2: Upload position data (relevant tables to dataframes for further analysis), and market data(prices of the securities):
+
+# Section 2.1: Uploading position data from DB tables:
+
 # the function below transforms db tables to dataframes for further processing:
 def read_table_to_df(table, engine):
     return pd.read_sql_table(table, con=engine)
 
-
-# Section 3: upload relevant tables to dataframes for further analysis
-
+# creating a list of dataframes to store risk capacity related dataframes:
 capacity_tables=capacity_questions
 risk_capacity=[]
 for table in capacity_tables:
@@ -142,7 +154,7 @@ for table in capacity_tables:
     pd_name=pd_name.set_index('Questions')
     risk_capacity.append(pd_name)
          
-# read tolerance questionnaire into a dataframes risk_tolerance:
+# read risk tolerance questionnaire into a dataframes risk_tolerance:
 risk_tolerance_df =  read_table_to_df('risk_tolerance_questions', engine)
 risk_tolerance_df=risk_tolerance_df.set_index('Questions')
 
@@ -150,17 +162,18 @@ risk_tolerance_df=risk_tolerance_df.set_index('Questions')
 portfolios_df =  read_table_to_df('portfolios', engine)
 portfolios_df=portfolios_df.set_index('Risk_tolerance')
 
-# read sectors into a sectors_mapping_df dataframe:
+# read sectors/industry/investment style mappings into a sectors_mapping_df dataframe:
 sectors_mapping_df =  read_table_to_df('sector_mapping', engine)
 sectors_mapping_df=sectors_mapping_df.set_index('Sector')
 
-# Section 4: create an API call and store Monte Carlo input data and daily returns data for the set of our portfolios
+# Section 2.2: market data upload - create an API call and store Monte Carlo input data and daily returns data for the set of our portfolios
 tickers_api_call = portfolios_df.columns.to_list()
 api_call_df, daily_returns_df=get_api_data(tickers_api_call, n_days, timeframe)
 
 
-# Section 5 - GAtheering data from an investor and generating risk scores (capacity score and tolerance score based on the answers to the questionnaires
-# will display the questionnaire to determine the risk tolearance and risk capacity profiles of an investor:
+# Section 3 Calculating risk scores:
+
+# Section 3.1: Gatheering data from an investor - questionnaires are displaied by using Streamlit software for interacting with the user
 
 with st.sidebar:
     
@@ -187,7 +200,7 @@ with st.sidebar:
         score= question.loc[question.index[0],resp]
         c_score+=score
 
-# based on the answrs calculate capacity risk and tolerance risk scores based on the answeres of the investor and generates two portfolios based on those scores:
+# Section 3.2: Generating risk scores (capacity score and tolerance score based on the answers to the questionnaires:
 
 # tolerance_score= round((score_1+score_2+score_3+score_4+score_5)/len(risk_tolerance_df.index),2)
 tolerance_score=round(t_score/len(risk_tolerance_df.index),2)
@@ -196,12 +209,13 @@ tolerance=get_bucket(tolerance_score, step)
 capacity_score= round(c_score/len(risk_capacity),2)
 capacity=get_bucket(capacity_score, step)
 
-# Section 6: Display output:
+# Display output - main bodies split into four tabs for easy visualization:
 # Create four tabs to display our application as per below breakdown
 tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Future Projected Returns'])
 
-# Section 6.1 Introduction: 
-#tab 1 will contain an introduction:
+# Tab 1: About: 
+#tab 1 will contain an introduction (information about the company, about the app and about the investment practices):
+
 with tab1:
     col1,col2=st.columns([1,9])
     with col1: 
@@ -221,9 +235,9 @@ with tab1:
     with st.expander("Funds Description and Risk profile"):
         st.write("Assets in our funds range from High Growth and Crypto to Value stocks and Fixed Income securities of Long term and Short-term maturities. Each fund is constructed with the risk profile of an investor in mind. Our funds are non-diversified and may experience greater volatility than more diversified investments. To compensate for the limited diversification, we only offer Large Cap US equities and Domestic stocks and bonds to reduce volatility brought by small- and medium-cap equities and excluding foreign currency exposure. And yet, there will always be risks involved with ETFs' investments, resulting in the possible loss of money")
 
-# Section 6.2 - Creating a subset of portfolios for the investor's review based on the above scores.
-# In addition to the capacity risk and tolerance risk based portfolios, cryptomix new etf and the benchmark fund will be added for further analysis:
+# Section 4 - Defining two portfolios based on the risk capacity and risk tolerance scores respectively and adding crypto enhanced and benchmark portfolios:
 
+# Tab 2: Portfolios: 
 #tab 2 will display the selected portfolios and their composition (an option to select a portfolio for detailed review will be given to the investor):
 
 with tab2:
@@ -257,10 +271,10 @@ with tab2:
     # st.table(four_portfolios_df)
 
     
-    # create portfolios_info list that shores sector, industry and names breakdowns per selected portfolios
+    # create portfolios_info list that stores sector, industry and names breakdowns per selected portfolios - function get_sector_industry_weights concatenates portfolio with sector/industry mapping table on tickers and generates relevant breakdowns for each portfolio.
     portfolios_info= [get_sector_industry_weights(portfolio, sectors_mapping_df) for portfolio in portfolios_list]
 
-    #create a dictionary that will store sector, industry, market cap name breakdown dataframes:
+    #create a dictionary that will store sector, industry, market cap name breakdown dataframes by zipping portfolios list and the breakdowns list from above
     four_portfolios_dict=dict(zip(four_portfolios, portfolios_info))
     
     #creating a plotly figure of breakdown by company/etf name for each selected portfolio and store in plotly_portfolio_figures
@@ -273,7 +287,7 @@ with tab2:
     
     #display four portfolios breakdowns by company/ETF name:
 
-    col1,col2,col3,col4 = st.columns(4)
+    col1,col2,col3,col4 = st.columns(4, gap='large')
     
     with col1:
         st.plotly_chart(plotly_portfolio_figures[0],use_container_width=True)
@@ -287,7 +301,7 @@ with tab2:
 
     portfolio_selection = st.selectbox("Select the portfolio to analyze:", tuple(four_portfolios))
     
-    #get dataframes for each breakdown characteristic - sector, Industry, Name, Market Cap, based on the sectors_mapping_df (constrcuted from our mapping table) and pull data from the dictionary by the index of the breakdown identifier (i.e. Industry). Note: total breakdown by sector is located first in the portfolios_info and therefore has an index of 0:
+    # get dataframes for each breakdown characteristic - sector, Industry, Name, Market Cap, based on the sectors_mapping_df (constrcuted from our mapping table) and pull data from the dictionary by the index of the breakdown identifier (i.e. Industry). Note: total breakdown by sector is located first in the portfolios_info and therefore has an index of 0:
     sector_breakdown_df = four_portfolios_dict[portfolio_selection][0]
     Industry_breakdown_df = four_portfolios_dict[portfolio_selection][sectors_mapping_df.columns.to_list().index('Industry')+1]
     Name_breakdown_df = four_portfolios_dict[portfolio_selection][sectors_mapping_df.columns.to_list().index('Name')+1]
@@ -309,31 +323,29 @@ with tab2:
     st.subheader('Portfolio Composition:')
     
     #display charts
-    # st.plotly_chart(fig_name_breakdown,use_container_width=True)
     
     # st.write('**Portfolio composition by**:')
-    col1, col2, col3= st.columns(3)
+    col1, col2, col3= st.columns(3, gap='large')
     with col1:
         st.plotly_chart(fig_sector_breakdown,use_container_width=True)                  
     with col2:
         st.plotly_chart(fig_industry_breakdown,use_container_width=True)
     with col3:
         st.plotly_chart(fig_market_cap_breakdown,use_container_width=True)
-    # with col4:
-    #     # st.write('**:blue[Market Cap & Style]**')
-    #     # st.table(Market_cap_breakdown_df)
-    #     st.plotly_chart(fig_name_breakdown,use_container_width=True)
+
    
     #select the last element in the breakdown list that contains the dataframe of all the fund characteristics:
     st.write('**Summary Table**')
     st.table(four_portfolios_dict[portfolio_selection][-1])
 
-# Section 6.3 Historical analysis:
+# # Section 5  Historical Analysis:
 
 # Call historical_analysis function to get 1-3y returns and Sharpe Ratio, Cumulative rturns per asset and per portfolio:
 
 summary_df, cum_returns_portfolios_df, cum_returns_assets_df, n_years=get_historical_analysis(daily_returns_df, four_portfolios_df, trading_days)
 summary_df = summary_df.applymap("{0:.2f}".format)
+
+# create plotly plots for assets and portfolios cummulative returns:
 
 fig_returns_portfolio=px.line(cum_returns_portfolios_df, y= cum_returns_portfolios_df.columns,title=f'<b>{n_years}-year cumulative returns by portfolio</b>')
 fig_returns_portfolio.update_xaxes(rangeslider_visible=True)
@@ -343,13 +355,15 @@ fig_returns_assets=px.line(cum_returns_assets_df, y= cum_returns_assets_df.colum
 fig_returns_assets.update_xaxes(rangeslider_visible=True)
 fig_returns_assets.update_layout(xaxis_range=[list(cum_returns_assets_df.index)[0],list(cum_returns_assets_df.index)[-1]], showlegend=True, title={'x' : 0.5}, yaxis_title="Cumulative Returns", legend=dict(orientation="h",))
 
+#Tab 3: Past Performance: will display the results of the historical performance
+
 with tab3:
     
     col1,col2=st.columns([1,9])
     with col1:
         st.image('../Images/Inv_growth.png',use_column_width='Auto')
     with col2:
-        st.title('Historical Perfolrmance:')
+        st.title('Historical Performance:')
         
 #     st.header(f'{n_years}-year underlying securities cumulative returns')
 #     st.line_chart(cum_returns_assets_df)
@@ -357,7 +371,7 @@ with tab3:
     st.plotly_chart(fig_returns_assets,use_container_width=True)
     
     st.header('Selected portfolios overview')
-    col1,col2,col3,col4 = st.columns(4)
+    col1,col2,col3,col4 = st.columns(4, gap='large')
     
     with col1:
         st.plotly_chart(plotly_portfolio_figures[0],use_container_width=True)
@@ -370,15 +384,14 @@ with tab3:
         
         
     st.header('Yearly returns and Sharpe-Ratio by portfolio')   
-    st.dataframe(summary_df.style.highlight_max(axis=0),use_container_width=True)
+    st.dataframe(summary_df.style.highlight_max(color='lightblue', axis=0),use_container_width=True)
     
     st.header('Performance of the portfolios')
     st.plotly_chart(fig_returns_portfolio,use_container_width=True)
-    # st.header(f'{n_years}-year portfolios cumulative returns')
-    # st.line_chart(cum_returns_portfolios_df)
                                                 
 
-# Section 6.4 Monte Carlo Simulation
+# Section 6: Monte Carlo Simulation
+
 # inputs to Monte Carlo instance:
 # portfolios df: four_portfolios_df; initial investment: initial_investment; time horizon: time_horizon 
 
@@ -389,6 +402,9 @@ with tab3:
 #example: first index corresponds to portfolios (0-3), second index: 0  to prices dataframe of this portfolio, 1: to weights of this portfolio
 Monte_Carlo_list=[get_MC_input(api_call_df, four_portfolios_df, portfolio) for portfolio in four_portfolios]
 
+# Tab 4: Future Projected Returns:
+# tab 4 will display Monte Carlo simulation results for a sected by user portfolio:
+
 with tab4:
      
     col1,col2=st.columns([1,9])
@@ -397,6 +413,7 @@ with tab4:
     with col2:
         st.title('Simulating future returns:')
    
+    #select portfolio:
     portfolio_selection_MC = st.selectbox("Select a portfolio for the simulation:", tuple(four_portfolios))
     run_simulation=st.button('Run simulation?')
     
@@ -415,7 +432,7 @@ with tab4:
         distibution = MC_instance.plot_distribution()
         returns = MC_instance.return_amount()
                 
-        bycompany,description = st.columns([1,2])
+        bycompany,description = st.columns([1,2], gap='large')
         with bycompany:
             st.plotly_chart(plotly_portfolio_figures[portfolio_index],use_container_width=True)
         with description:
