@@ -1,6 +1,6 @@
 # Investment Advisor
 
-### The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorbe risk. Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering. Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stock. To increase clients' awareness of our new Digital Assets enhanced portfolio, we will include the comparison performance of this fund too.
+### The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorb risk. Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering. Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stock. To increase clients' awareness of our new Digital Assets enhanced portfolio, we will include the comparison performance of this fund too.
 
 ---
 
@@ -189,38 +189,29 @@ Confirm the installation of the pytz package by running the following command in
 
 > Application summary<br/>
 
-Investment Advisor assists ......<br/>
-Furthermore, Streamlit library transforms Investment Advisor into an interactive web application that nontechnical users without any coding experience can use.
+The Investment Advisor tool helps investors make educated decisions based on their risk capacity and risk tolerance, just by asking a few questions.<br/>
+Furthermore, Streamlit library transforms Investment Advisor into an interactive web application that nontechnical users without any coding experience can use.<br/> Answer a few questions about your income and attitude towards investment, and the application will provide three portfolio recommendations as well as a benchmark portfolio
 
-- The analyzis begings by informing the users about the portfolio of stocks that form the ETF:<br/>
-  ![ETF_table](Images/ETF_table.PNG)<br/>
-- Next, a single stock's daily returns and cumulative returns are displayed and the trends are analyzed:<br/>
-  ![ETF_returns](Images/PYPL_returns.png)<br/>
-  ![ETF_c_returns](Images/PYPL_C_returns.png)<br/>
-- A zoom into top 10 PPYL's returns and the information on when the stock was traded above $200 is also provided:<br/>
-  ![ETF_top](Images/PYPL_highest.PNG)<br/>
-  ![ETF_200](Images/PPYL_200.PNG)<br/>
-- We procede wtih the ETF's cumulative returns analyzis:<br/>
-  ![ETF_returns](Images/ETF_returns.png)<br/>
-- We finalyze with performance comparison between the sinle stock (PYPL) and the ETF:<br/>
-  ![ETF_PPYL](Images/ETF_PPYL.png)<br/>
-- Voilà library is deployed to give web based interactive experience to the tool's users:<br/>
-  ![Voila](Images/voila.PNG)<br/>
+- The analysis begins by asking the user some questions:<br/>
+  ![questionnaire](Images/questionnaire.PNG)<br/>
+- Next, risk capacity and risk tolerance scores are calculated:<br/>
+  ![risk_scores](Images/risk_scores.PNG)<br/>
+- The calculated portfolios can be compared side by side at a glance:<br/>
+  ![portfolios_comparison](Images/portfolios_comparison.PNG)<br/>
+- You can find more details about each portfolio by using a dropdown menu:<br/>
+  ![portfolio_composition](Images/portfolio_composition.PNG)<br/>
+- The historical performance of each asset is shown to the user in an easy to read chart:<br/>
+  ![historical_performance](Images/historical_performance.PNG)<br/>
+- A Monte Carlo simulation can be run on each portfolio selected, and the estimated returns will be displayed:<br/>
+  ![simulation_1](Images/simulation_1.PNG)<br/>
+  ![simulation_2](images/simulation_2.PNG)<br/>
 
-  `Play Streamlit demo to use the application`<br/>
 
-<video src=ETF_Analyzer.mp4 controls="controls" style="max-width: 730px;"></video>
 
 > Getting started<br/>
 
-- To use ETF Analyzer first clone the repository to your PC.<br/>
-- Open `Jupyter lab` as per the instructions in the [Installation Guide](#installation-guide) to run the application.<br/>
-
-- Run Voilà in the Terminal: Voilà accepts a path to the notebook and then generates a web app with any visualizations or output that were generated in the Jupyter notebook. The code is simple:
-
-```python
-voila <relative-path-to-notebook>
-```
+- To use the Investment Advisor first clone the repository to your PC.<br/>
+- Use `streamlit run my_app.py` as per the instructions in the [Installation Guide](#installation-guide) to run the application.<br/>
 
 ---
 
