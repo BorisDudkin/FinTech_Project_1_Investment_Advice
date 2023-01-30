@@ -1,6 +1,6 @@
 # Investment Advisor
 
-### The Investment Advisor was developed to help empower potential investors by providing portfolio suggestions from just a few questions about income and attitude towards investment.<br/>The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorb risk.<br/> Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering.<br/> A third 'Cryptomix' portfolio including cryptocurrency assets will also be included.<br/> Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stocks.
+### The Investment Advisor was developed to help empower potential investors by providing portfolio suggestions from just a few questions about income and attitude towards investment.The Investment Advisor application will assess an investor's risk tolerance and his/her's capacity to absorb risk. Based on those evaluations, two corresponding risk scores will be calculated and associated investment portfolios will be chosen from our ETFs offering. A third 'Cryptomix' portfolio including cryptocurrency assets will also be included. Their performance will be assessed and compared to the Benchmark portfolio of 40% Bonds 60% Stocks.
 
 ---
 
