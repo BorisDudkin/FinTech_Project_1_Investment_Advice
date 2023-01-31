@@ -388,7 +388,7 @@ with tab3:
         
         
     st.header('Yearly returns and Sharpe-Ratio by portfolio')   
-    st.dataframe(summary_df.style.highlight_max(color='lightblue', axis=0),use_container_width=True)
+    st.dataframe(summary_df,use_container_width=True)
     
     st.header('Performance of the portfolios')
     st.plotly_chart(fig_returns_portfolio,use_container_width=True)
