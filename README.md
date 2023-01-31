@@ -176,18 +176,6 @@ Confirm the installation of the Alpaca Trade API package by running the followin
 ```python
  conda list alpaca-trade-api
 ```
-
-To install pytz, in Terminal run:
-
-```python
-pip install pytz
-```
-
-Confirm the installation of the pytz package by running the following command in Terminal:
-
-```python
- conda list pytz
-```
 ---
 
 ## Usage
