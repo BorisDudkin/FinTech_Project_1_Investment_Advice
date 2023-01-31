@@ -54,7 +54,7 @@ alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
 # Then, next time the function is called, if the function nae, its body and parameters have not changed Streamlit knows it can skip executing the function altogether. 
 # Instead, it just reads the output from the local cache and passes it on to the caller.
 # Call api to fetch market data
-@st.cache
+@st.cache()
 def get_api_data(tickers, days, timeframe='1Day'):
    
     #separate crypto and non-crypto tickers:
@@ -129,6 +129,9 @@ def get_api_data(tickers, days, timeframe='1Day'):
     
     #construct daily returns that will be used in the historical analysiss:
     daily_returns_df=closing_prices_df.pct_change().dropna()
+
+    #cleanse for stocks split 1:2 and above
+    daily_returns_df[daily_returns_df<=-0.5]=0
     
     return (total_df, daily_returns_df)
 
@@ -418,7 +421,7 @@ with tab4:
 
     st.write("**The following were the outcomes...**")
 
-    st.caption("_**Disclaimer:** These results are not guaranteed but rather an estimate based on the assumption of normal distribution, which quantifies risk and return by the mean for returns and standard deviation for risk. Outcome is based on random number algorithm and may not render consistent results._")
+    #st.warning("_**Disclaimer:** These results are not guaranteed but rather an estimate based on the assumption of normal distribution, which quantifies risk and return by the mean for returns and standard deviation for risk. Outcome is based on random number algorithm and may not render consistent results._")
    
     #select portfolio:
     portfolio_selection_MC = st.selectbox("Select a portfolio for the simulation:", tuple(four_portfolios))
@@ -440,13 +443,14 @@ with tab4:
         distibution = MC_instance.plot_distribution()
         returns = MC_instance.return_amount()
                 
-        bycompany,description = st.columns([1,2], gap='large')
+        bycompany,description = st.columns(2, gap='large')
         with bycompany:
             st.plotly_chart(plotly_portfolio_figures[portfolio_index],use_container_width=True)
         with description:
             st.subheader(f"{portfolio_selection_MC} Estimated Returns:")
-            st.subheader(f'With a 95% confidence, an initial investment of _${initial_investment}_ over the course of _{time_horizon} years_ will result in your {portfolio_selection_MC} having an estimated return value between **:blue[{returns[0]:.2f}]** and **:blue[{returns[1]:.2f}]** USD.')
-    
+            st.markdown(f'With a 95% confidence, an initial investment of _${initial_investment}_ over the course of _{time_horizon} years_ will result in your {portfolio_selection_MC} portfolio having an estimated return value between **:blue[{returns[0]:.2f}]** and **:blue[{returns[1]:.2f}]** USD.')
+            st.warning("_**Disclaimer:**_ These results are not guaranteed but rather an estimate based on the assumption of normal distribution, which quantifies risk and return by the mean for returns and standard deviation for risk. Outcome is based on random number algorithm and may not render consistent results.")
+
         st.subheader(f"{portfolio_selection_MC} Portfolio based on {num_simulation} Simulations:")
         st.plotly_chart(plot, use_container_width=True)
         st.caption(f'A line chart representing {num_simulation} simulations over {time_horizon} years.')
