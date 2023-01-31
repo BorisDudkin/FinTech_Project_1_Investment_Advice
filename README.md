@@ -62,10 +62,10 @@ _Libraries_
 
 ## Installation Guide
 
-To run this program the application must be started from the terminal using Streamlit.<br/> A .env file must also be written and stored in the local directory before running the program according to the instructions below.<br/> Once the installations below are completed and the env file has been made, navigate to the 'Boris' folder and run the following command in your terminal to launch the program:
+To run this program the application must be started from the terminal using Streamlit.<br/> A .env file must also be written and stored in the local directory before running the program according to the instructions below.<br/> Once the installations below are completed and the .env file has been made, navigate to the folder containing the application and run the following command in your terminal to launch the program:
 
 ```python
-streamlit run my_app.py
+streamlit run investment_app.py
 ```
 
 Jupyter lab is the preferred software to work with this application.<br/> Jupyter lab is a part of the **[anaconda](https://www.anaconda.com/)** distribution package and therefore it is recommended to download **anaconda** first.<br/> Once downloaded, run the following command in your terminal to launch Jupyter lab:
@@ -208,7 +208,7 @@ https://user-images.githubusercontent.com/118786747/215371133-e1c822cd-d054-4f2e
 > Getting started<br/>
 
 - To use the Investment Advisor first clone the repository to your PC.<br/>
-- Use `streamlit run my_app.py` as per the instructions in the [Installation Guide](#installation-guide) to run the application.<br/>
+- Use `streamlit run investment_app.py` as per the instructions in the [Installation Guide](#installation-guide) to run the application.<br/>
 
 ---
 
