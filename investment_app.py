@@ -239,7 +239,12 @@ with tab1:
 
 with tab2:
     
-    st.title('The Scores and their Corresponding Selected Portfolios')
+    col1,col2=st.columns([1,9])
+    with col1: 
+        st.image('Images/image2.png', use_column_width=True)
+    with col2:
+        st.title('The Scores and their Corresponding Selected Portfolios')
+
 
     st.header('Scores Assessment:')
 
@@ -261,7 +266,6 @@ with tab2:
     four_portfolios_df= pd.concat(portfolios_list, axis=1, ignore_index=False)
     four_portfolios_df.columns = four_portfolios
     four_portfolios_df=four_portfolios_df.loc[(four_portfolios_df!=0).any(axis=1)]
-    # st.table(four_portfolios_df)
 
     
     # create portfolios_info list that stores sector, industry and names breakdowns per selected portfolios - function get_sector_industry_weights concatenates portfolio with sector/industry mapping table on tickers and generates relevant breakdowns for each portfolio.
@@ -316,8 +320,7 @@ with tab2:
     st.subheader('Portfolio Composition:')
     
     #display charts
-    
-    # st.write('**Portfolio composition by**:')
+
     col1, col2, col3= st.columns(3, gap='large')
     with col1:
         st.plotly_chart(fig_sector_breakdown,use_container_width=True)                  
@@ -351,8 +354,12 @@ fig_returns_assets.update_layout(xaxis_range=[list(cum_returns_assets_df.index)[
 #Tab 3: Past Performance: will display the results of the historical performance
 
 with tab3:
-
-    st.title('Historical Performance')
+    
+    col1,col2=st.columns([1,9])
+    with col1:
+        st.image('Images/image3.png', use_column_width=True)
+    with col2:
+        st.title('Historical Performance')
 
     st.header('Performance of Underlying Assets:')
     st.plotly_chart(fig_returns_assets,use_container_width=True)
@@ -399,14 +406,18 @@ Monte_Carlo_list=[get_MC_input(api_call_df, four_portfolios_df, portfolio) for p
 
 with tab4:
      
-    st.title('Simulating Future Returns')
+    col1,col2=st.columns([1,9])
+    with col1:
+        st.image('Images/image4.png', use_column_width=True)
+    with col2:
+        st.title('Simulating Future Returns')
 
     st.header(f"Monte Carlo {time_horizon} Year Portfolio Analysis:")
 
     st.write(f"**With the utilization of a financial simulation known as 'Monte Carlo', your portfolios were analyzed for their estimated future returns using an intial invesment of :blue[${initial_investment:.2f}] over the span of :blue[{time_horizon:.0f}] years.**")
 
     st.write("**The following were the outcomes...**")
-
+   
     #select portfolio:
     portfolio_selection_MC = st.selectbox("Select a portfolio for the simulation:", tuple(four_portfolios))
     run_simulation=st.button('Run simulation?')
