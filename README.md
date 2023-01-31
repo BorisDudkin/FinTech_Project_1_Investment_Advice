@@ -225,10 +225,10 @@ Brian Wander:
 
 - [Email](brianwander101@gmail.com)
 
-Boris Dudkin:
+Adam Jimenez:
 
 - [Email](adamjimenez642@gmail.com)
-- [LinkedIn](www.linkedin.com/in/adam-jimenez)
+- [LinkedIn](linkedin.com/in/adam-jimenez)
 
 ---
 
