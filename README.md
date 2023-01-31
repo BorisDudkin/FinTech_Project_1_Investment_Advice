@@ -33,7 +33,6 @@ _Libraries_
 2. `PyViz` is a Python visualization package that provides a single platform for accessing multiple visualization libraries. The visualization libraries used in this application are listed below: <br/>
 
    - [PyViz ](https://pyviz.org/) - for guidance on how to start visualization, interactive visualization, styles and layouts customization.
-   - [hvPlot ](https://hvplot.holoviz.org/) is a visualization library that is designed to work with Pandas DataFrames and that we can use to create interactive plots for our data.<br/>
    - [Bokeh](https://bokeh.org/) - is an open source vizualization library that allows developers to create interactive plots. 
    - [Holoviews](https://holoviews.org/) - is an open source vizualization library that allows developers to create interactive plots, designed to interact with tabular data. 
    - [Plotly](https://plotly.com/) - is a library that allows developers to build interactive charts, tables and graphs from data.
@@ -58,17 +57,15 @@ _Libraries_
 
    - [Alpaca](https://alpaca.markets/) - to sign up and read about installation and usage.<br/>
    
-8. `pytz` is a library that adds a timezone database and functions to perform timezone calculations
-
-   - [pytz](https://pypi.org/project/pytz/) - to read about installation and usage.<br/>
+ 
 ---
 
 ## Installation Guide
 
-To run this program the application must be started from the terminal using Streamlit.<br/> A .env file must also be written and stored in the local directory before running the program according to the instructions below.<br/> Once the installations below are completed and the env file has been made, navigate to the 'Boris' folder and run the following command in your terminal to launch the program:
+To run this program the application must be started from the terminal using Streamlit.<br/> A .env file must also be written and stored in the local directory before running the program according to the instructions below.<br/> Once the installations below are completed and the .env file has been made, navigate to the folder containing the application and run the following command in your terminal to launch the program:
 
 ```python
-streamlit run my_app.py
+streamlit run investment_app.py
 ```
 
 Jupyter lab is the preferred software to work with this application.<br/> Jupyter lab is a part of the **[anaconda](https://www.anaconda.com/)** distribution package and therefore it is recommended to download **anaconda** first.<br/> Once downloaded, run the following command in your terminal to launch Jupyter lab:
@@ -103,13 +100,21 @@ To install the PyViz visualizations, in Terminal run:
 
 ```python
 # conda
-conda install -c pyviz hvplot bokeh holoviews plotly
+conda install -c pyviz bokeh holoviews plotly
 ```
 
 Confirm the installation of all the PyViz packages by running the following commands in Terminal:
-
 ```python
- conda list hvplot
+conda list pyviz
+```
+```python
+ conda list bokeh
+```
+```python
+ conda list holoviews
+```
+```python
+ conda list plotly
 ```
 
 To install SQLAlchemy, in Terminal run:
@@ -171,18 +176,6 @@ Confirm the installation of the Alpaca Trade API package by running the followin
 ```python
  conda list alpaca-trade-api
 ```
-
-To install pytz, in Terminal run:
-
-```python
-pip install pytz
-```
-
-Confirm the installation of the pytz package by running the following command in Terminal:
-
-```python
- conda list pytz
-```
 ---
 
 ## Usage
@@ -215,7 +208,7 @@ https://user-images.githubusercontent.com/118786747/215371133-e1c822cd-d054-4f2e
 > Getting started<br/>
 
 - To use the Investment Advisor first clone the repository to your PC.<br/>
-- Use `streamlit run my_app.py` as per the instructions in the [Installation Guide](#installation-guide) to run the application.<br/>
+- Use `streamlit run investment_app.py` as per the instructions in the [Installation Guide](#installation-guide) to run the application.<br/>
 
 ---
 
@@ -229,7 +222,13 @@ Boris Dudkin:
 - [LinkedIn](www.linkedin.com/in/Boris-Dudkin)
 
 Brian Wander:
+
 - [Email](brianwander101@gmail.com)
+
+Adam Jimenez:
+
+- [Email](adamjimenez642@gmail.com)
+- [LinkedIn](linkedin.com/in/adam-jimenez)
 
 ---
 
