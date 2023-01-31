@@ -33,7 +33,6 @@ _Libraries_
 2. `PyViz` is a Python visualization package that provides a single platform for accessing multiple visualization libraries. The visualization libraries used in this application are listed below: <br/>
 
    - [PyViz ](https://pyviz.org/) - for guidance on how to start visualization, interactive visualization, styles and layouts customization.
-   - [hvPlot ](https://hvplot.holoviz.org/) is a visualization library that is designed to work with Pandas DataFrames and that we can use to create interactive plots for our data.<br/>
    - [Bokeh](https://bokeh.org/) - is an open source vizualization library that allows developers to create interactive plots. 
    - [Holoviews](https://holoviews.org/) - is an open source vizualization library that allows developers to create interactive plots, designed to interact with tabular data. 
    - [Plotly](https://plotly.com/) - is a library that allows developers to build interactive charts, tables and graphs from data.
@@ -58,9 +57,7 @@ _Libraries_
 
    - [Alpaca](https://alpaca.markets/) - to sign up and read about installation and usage.<br/>
    
-8. `pytz` is a library that adds a timezone database and functions to perform timezone calculations
-
-   - [pytz](https://pypi.org/project/pytz/) - to read about installation and usage.<br/>
+ 
 ---
 
 ## Installation Guide
@@ -103,13 +100,21 @@ To install the PyViz visualizations, in Terminal run:
 
 ```python
 # conda
-conda install -c pyviz hvplot bokeh holoviews plotly
+conda install -c pyviz bokeh holoviews plotly
 ```
 
 Confirm the installation of all the PyViz packages by running the following commands in Terminal:
-
 ```python
- conda list hvplot
+conda list pyviz
+```
+```python
+ conda list bokeh
+```
+```python
+ conda list holoviews
+```
+```python
+ conda list plotly
 ```
 
 To install SQLAlchemy, in Terminal run:
