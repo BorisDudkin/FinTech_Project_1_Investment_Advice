@@ -1,16 +1,25 @@
 # Import Pandas and Numpy library
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
 def get_historical_analysis(daily_returns_df, portfolios_df, trading_days):
-    trading_days = 252
+
+    """Generates input for rendering of the Historical performance of four slected portfolios and underlying assets
+
+    Args:
+        daily_returns_df (daataframe): daily returns from API call containing all tickers in our universe of portfolios
+        portfolios_df (daataframe): four portfolios selected for analysis
+        trading_days (int): number of trading days in a year
+
+    Returns:
+        A list of  (1-3y returns + annualized Sharpe Ratio based on the history of returns), cumulative_returns_portfolios, cumulative_returns_assets, years
+
+    """
+    trading_days = trading_days
     #this might not be needed later
     symbols = list(portfolios_df.index)
     
-    #clean the data for stock splits by removing 100% changes
-    # daily_returns_df[daily_returns_df<=-0.5]=0
-
     # construct prices only for assets in our portfolios dataframe:
     daily_returns_df=daily_returns_df.loc[:,symbols]
 

@@ -1,6 +1,18 @@
 import pandas as pd
 
+
 def get_MC_input(Monte_Carlo_df, portfolios, portfolio):
+    """Determines two inputs for instanciating the Monte Carlo class
+
+    Args:
+        Monte_Carlo_df (daataframe): prices from API call containing all tickers in our universe of portfolios
+        portfolios (daataframe): four portfolios selected for analysis
+        portfolio (str): a specific portfolio for which Monte Carlo class is to be instantiated
+
+    Returns:
+        A list of adjusted for the selected portfolio prices dataframe and the corresponding list of weights
+
+    """
     
     # select the portfolio from four portfolios df
     portfolio_df=portfolios.loc[:,portfolio]
