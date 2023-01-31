@@ -215,11 +215,10 @@ tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Futur
 #tab 1 will contain an introduction (information about the company, about the app and about the investment practices):
 
 with tab1:
-    col1,col2=st.columns([1,9])
-    with col1: 
-        st.image('Images/broker.png',width=85)
-    with col2:
-        st.title('Investment Advisor Application')
+
+    st.image('Images/banner1.png',use_column_width=True)
+
+    st.title('Investment Advisor Application')
 
     st.header('About This Application:')
 
@@ -240,12 +239,8 @@ with tab1:
 
 with tab2:
     
-    col1,col2=st.columns([1,9])
-    with col1: 
-        st.image('Images/pie.png', width=85)
-    with col2:
-        st.title('The Scores and their Corresponding Selected Portfolios')
-   
+    st.title('The Scores and their Corresponding Selected Portfolios')
+
     st.header('Scores Assessment:')
 
     st.write(f'With the risk scores progressing from the most conservative (score 0) to the highest risk (score 1) you scored **:blue[{capacity_score}]** on your _capacity to absorbe risk_ and **:blue[{tolerance_score}]** on your _risk tolerance_.')
@@ -356,15 +351,9 @@ fig_returns_assets.update_layout(xaxis_range=[list(cum_returns_assets_df.index)[
 #Tab 3: Past Performance: will display the results of the historical performance
 
 with tab3:
-    
-    col1,col2=st.columns([1,9])
-    with col1:
-        st.image('Images/Inv_growth.png', width=85)
-    with col2:
-        st.title('Historical Performance')
-        
-#     st.header(f'{n_years}-year underlying securities cumulative returns')
-#     st.line_chart(cum_returns_assets_df)
+
+    st.title('Historical Performance')
+
     st.header('Performance of Underlying Assets:')
     st.plotly_chart(fig_returns_assets,use_container_width=True)
     
@@ -402,6 +391,7 @@ with tab3:
 # four_portfolios_df: dataframe of our selected portfolios - in the function it will be used to get weights input to Monte Carlo class;
 # portfolio: we create an instance for each portfolio and also use portfolio tickers to select price data from Monte_Carlo_df
 #example: first index corresponds to portfolios (0-3), second index: 0  to prices dataframe of this portfolio, 1: to weights of this portfolio
+
 Monte_Carlo_list=[get_MC_input(api_call_df, four_portfolios_df, portfolio) for portfolio in four_portfolios]
 
 # Tab 4: Future Projected Returns:
@@ -409,11 +399,7 @@ Monte_Carlo_list=[get_MC_input(api_call_df, four_portfolios_df, portfolio) for p
 
 with tab4:
      
-    col1,col2=st.columns([1,9])
-    with col1:
-        st.image('Images/earning.png', width=85)
-    with col2:
-        st.title('Simulating Future Returns')
+    st.title('Simulating Future Returns')
 
     st.header(f"Monte Carlo {time_horizon} Year Portfolio Analysis:")
 
@@ -421,8 +407,6 @@ with tab4:
 
     st.write("**The following were the outcomes...**")
 
-    #st.warning("_**Disclaimer:** These results are not guaranteed but rather an estimate based on the assumption of normal distribution, which quantifies risk and return by the mean for returns and standard deviation for risk. Outcome is based on random number algorithm and may not render consistent results._")
-   
     #select portfolio:
     portfolio_selection_MC = st.selectbox("Select a portfolio for the simulation:", tuple(four_portfolios))
     run_simulation=st.button('Run simulation?')
@@ -431,6 +415,7 @@ with tab4:
     MC_prices_df=Monte_Carlo_list[portfolio_index][0]
     MC_weights_df=Monte_Carlo_list[portfolio_index][1]
     num_simulation = num_sim
+
     if run_simulation:
         # initiate an instance of MCSimulation class
         with st.spinner('Simulation running...'):
