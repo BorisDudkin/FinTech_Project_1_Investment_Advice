@@ -222,7 +222,13 @@ Boris Dudkin:
 - [LinkedIn](www.linkedin.com/in/Boris-Dudkin)
 
 Brian Wander:
+
 - [Email](brianwander101@gmail.com)
+
+Boris Dudkin:
+
+- [Email](adamjimenez642@gmail.com)
+- [LinkedIn](www.linkedin.com/in/adam-jimenez)
 
 ---
 
