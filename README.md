@@ -193,13 +193,13 @@ Furthermore, Streamlit library transforms Investment Advisor into an interactive
   ![simulation_1](Images/simulation_1.PNG)<br/>
 - The simulated returns are plotted on two graphs, a line graph and a histogram that provide useful information such as the median, mode, and quartiles.
   ![simulation_2](Images/simulation_2.PNG)<br/>
+  
+  
+
+https://user-images.githubusercontent.com/118786747/215937383-553539c1-729f-4841-bf23-42f4d28b6825.mp4
 
 
-
-https://user-images.githubusercontent.com/118786747/215371133-e1c822cd-d054-4f2e-80d0-c34880016df5.mp4
-
-
-
+  
 > Getting started<br/>
 
 - To use the Investment Advisor first clone the repository to your PC.<br/>
