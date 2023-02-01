@@ -182,10 +182,16 @@ Furthermore, Streamlit library transforms Investment Advisor into an interactive
   ![portfolios_comparison](Images/portfolios_comparison.PNG)<br/>
 - You can find more details about each portfolio by using a dropdown menu:<br/>
   ![portfolio_composition](Images/portfolio_composition.PNG)<br/>
-- The historical performance of each asset is shown to the user in an easy to read chart:<br/>
+- The historical performance of each asset is shown to the user in an interactive plot:<br/>
   ![historical_performance](Images/historical_performance.PNG)<br/>
+- Previous yearly returns and Sharpe Ratios can give users a quick overview of past portfolio performance:<br/>
+  ![yearly_returns_sharpe](Images/yearly_returns_sharpe.PNG)<br/>
+- Cumulative returns of every portfolio over the past three years are shown in an overlay plot:<br/>
+  ![cumulative_returns_overlay](Images/cumulative_returns_overlay.PNG)<br/>
 - A Monte Carlo simulation can be run on each portfolio selected, and the estimated returns will be displayed:<br/>
+- A 95% confidence interval is calculated from the simulation, and displayed to the user along with the portfolio makeup:<br/>
   ![simulation_1](Images/simulation_1.PNG)<br/>
+- The simulated returns are plotted on two graphs, a line graph and a histogram that provide useful information such as the median, mode, and quartiles.
   ![simulation_2](Images/simulation_2.PNG)<br/>
 
 
