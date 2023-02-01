@@ -33,8 +33,6 @@ _Libraries_
 2. `PyViz` is a Python visualization package that provides a single platform for accessing multiple visualization libraries. The visualization libraries used in this application are listed below: <br/>
 
    - [PyViz ](https://pyviz.org/) - for guidance on how to start visualization, interactive visualization, styles and layouts customization.
-   - [Bokeh](https://bokeh.org/) - is an open source vizualization library that allows developers to create interactive plots. 
-   - [Holoviews](https://holoviews.org/) - is an open source vizualization library that allows developers to create interactive plots, designed to interact with tabular data. 
    - [Plotly](https://plotly.com/) - is a library that allows developers to build interactive charts, tables and graphs from data.
 
 3. `SQLAlchemy` is an open-source SQL library for Python. It is designed to ease the communication between Python-based programs and databases"
@@ -78,7 +76,7 @@ To create the .env file, open a .txt document and type in your keys from the Alp
 
 ![env](Images/env.PNG)
 
-Rename the text file to .env and save the file to the 'Boris' Directory after selecting 'All Files':
+Rename the text file to .env and save the file to the root directory after selecting 'All Files':
 
 ![env_save](Images/env_save.PNG)
 
@@ -96,23 +94,14 @@ pip install pandas
 conda install pandas
 ```
 
-To install the PyViz visualizations, in Terminal run:
+To install the plotly visualization library, in Terminal run:
 
 ```python
-# conda
-conda install -c pyviz bokeh holoviews plotly
+pip install plotly==5.13.0
 ```
 
-Confirm the installation of all the PyViz packages by running the following commands in Terminal:
-```python
-conda list pyviz
-```
-```python
- conda list bokeh
-```
-```python
- conda list holoviews
-```
+Confirm the installation of the plotly package by running the following command in Terminal:
+
 ```python
  conda list plotly
 ```
@@ -222,7 +211,13 @@ Boris Dudkin:
 - [LinkedIn](www.linkedin.com/in/Boris-Dudkin)
 
 Brian Wander:
+
 - [Email](brianwander101@gmail.com)
+
+Adam Jimenez:
+
+- [Email](adamjimenez642@gmail.com)
+- [LinkedIn](linkedin.com/in/adam-jimenez)
 
 ---
 
