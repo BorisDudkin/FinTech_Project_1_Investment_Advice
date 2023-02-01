@@ -215,11 +215,10 @@ tab1, tab2, tab3, tab4 = st.tabs(['About','Portfolios','Past Performance','Futur
 #tab 1 will contain an introduction (information about the company, about the app and about the investment practices):
 
 with tab1:
-    col1,col2=st.columns([1,9])
-    with col1: 
-        st.image('Images/broker.png',width=85)
-    with col2:
-        st.title('Investment Advisor Application')
+
+    st.image('Images/banner1.png',use_column_width=True)
+
+    st.title('Investment Advisor Application')
 
     st.header('About This Application:')
 
@@ -242,10 +241,11 @@ with tab2:
     
     col1,col2=st.columns([1,9])
     with col1: 
-        st.image('Images/pie.png', width=85)
+        st.image('Images/image2.png', use_column_width=True)
     with col2:
         st.title('The Scores and their Corresponding Selected Portfolios')
-   
+
+
     st.header('Scores Assessment:')
 
     st.write(f'With the risk scores progressing from the most conservative (score 0) to the highest risk (score 1) you scored **:blue[{capacity_score}]** on your _capacity to absorbe risk_ and **:blue[{tolerance_score}]** on your _risk tolerance_.')
@@ -266,7 +266,6 @@ with tab2:
     four_portfolios_df= pd.concat(portfolios_list, axis=1, ignore_index=False)
     four_portfolios_df.columns = four_portfolios
     four_portfolios_df=four_portfolios_df.loc[(four_portfolios_df!=0).any(axis=1)]
-    # st.table(four_portfolios_df)
 
     
     # create portfolios_info list that stores sector, industry and names breakdowns per selected portfolios - function get_sector_industry_weights concatenates portfolio with sector/industry mapping table on tickers and generates relevant breakdowns for each portfolio.
@@ -321,8 +320,7 @@ with tab2:
     st.subheader('Portfolio Composition:')
     
     #display charts
-    
-    # st.write('**Portfolio composition by**:')
+
     col1, col2, col3= st.columns(3, gap='large')
     with col1:
         st.plotly_chart(fig_sector_breakdown,use_container_width=True)                  
@@ -359,12 +357,10 @@ with tab3:
     
     col1,col2=st.columns([1,9])
     with col1:
-        st.image('Images/Inv_growth.png', width=85)
+        st.image('Images/image3.png', use_column_width=True)
     with col2:
         st.title('Historical Performance')
-        
-#     st.header(f'{n_years}-year underlying securities cumulative returns')
-#     st.line_chart(cum_returns_assets_df)
+
     st.header('Performance of Underlying Assets:')
     st.plotly_chart(fig_returns_assets,use_container_width=True)
     
@@ -402,6 +398,7 @@ with tab3:
 # four_portfolios_df: dataframe of our selected portfolios - in the function it will be used to get weights input to Monte Carlo class;
 # portfolio: we create an instance for each portfolio and also use portfolio tickers to select price data from Monte_Carlo_df
 #example: first index corresponds to portfolios (0-3), second index: 0  to prices dataframe of this portfolio, 1: to weights of this portfolio
+
 Monte_Carlo_list=[get_MC_input(api_call_df, four_portfolios_df, portfolio) for portfolio in four_portfolios]
 
 # Tab 4: Future Projected Returns:
@@ -411,7 +408,7 @@ with tab4:
      
     col1,col2=st.columns([1,9])
     with col1:
-        st.image('Images/earning.png', width=85)
+        st.image('Images/image4.png', use_column_width=True)
     with col2:
         st.title('Simulating Future Returns')
 
@@ -420,8 +417,6 @@ with tab4:
     st.write(f"**With the utilization of a financial simulation known as 'Monte Carlo', your portfolios were analyzed for their estimated future returns using an intial invesment of :blue[${initial_investment:.2f}] over the span of :blue[{time_horizon:.0f}] years.**")
 
     st.write("**The following were the outcomes...**")
-
-    #st.warning("_**Disclaimer:** These results are not guaranteed but rather an estimate based on the assumption of normal distribution, which quantifies risk and return by the mean for returns and standard deviation for risk. Outcome is based on random number algorithm and may not render consistent results._")
    
     #select portfolio:
     portfolio_selection_MC = st.selectbox("Select a portfolio for the simulation:", tuple(four_portfolios))
@@ -431,6 +426,7 @@ with tab4:
     MC_prices_df=Monte_Carlo_list[portfolio_index][0]
     MC_weights_df=Monte_Carlo_list[portfolio_index][1]
     num_simulation = num_sim
+
     if run_simulation:
         # initiate an instance of MCSimulation class
         with st.spinner('Simulation running...'):
