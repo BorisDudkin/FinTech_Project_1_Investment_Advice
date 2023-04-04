@@ -1,0 +1,13 @@
+alpaca_trade_api
+bokeh
+holoviews
+matplotlib_inline
+numpy
+pandas
+plotly
+python-dotenv
+pytz
+questionary
+SQLAlchemy
+streamlit
+
