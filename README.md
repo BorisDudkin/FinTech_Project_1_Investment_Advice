@@ -33,8 +33,6 @@ _Libraries_
 2. `PyViz` is a Python visualization package that provides a single platform for accessing multiple visualization libraries. The visualization libraries used in this application are listed below: <br/>
 
    - [PyViz ](https://pyviz.org/) - for guidance on how to start visualization, interactive visualization, styles and layouts customization.
-   - [Bokeh](https://bokeh.org/) - is an open source vizualization library that allows developers to create interactive plots. 
-   - [Holoviews](https://holoviews.org/) - is an open source vizualization library that allows developers to create interactive plots, designed to interact with tabular data. 
    - [Plotly](https://plotly.com/) - is a library that allows developers to build interactive charts, tables and graphs from data.
 
 3. `SQLAlchemy` is an open-source SQL library for Python. It is designed to ease the communication between Python-based programs and databases"
@@ -78,7 +76,7 @@ To create the .env file, open a .txt document and type in your keys from the Alp
 
 ![env](Images/env.PNG)
 
-Rename the text file to .env and save the file to the 'Boris' Directory after selecting 'All Files':
+Rename the text file to .env and save the file to the root directory after selecting 'All Files':
 
 ![env_save](Images/env_save.PNG)
 
@@ -96,23 +94,14 @@ pip install pandas
 conda install pandas
 ```
 
-To install the PyViz visualizations, in Terminal run:
+To install the plotly visualization library, in Terminal run:
 
 ```python
-# conda
-conda install -c pyviz bokeh holoviews plotly
+pip install plotly==5.13.0
 ```
 
-Confirm the installation of all the PyViz packages by running the following commands in Terminal:
-```python
-conda list pyviz
-```
-```python
- conda list bokeh
-```
-```python
- conda list holoviews
-```
+Confirm the installation of the plotly package by running the following command in Terminal:
+
 ```python
  conda list plotly
 ```
@@ -193,18 +182,24 @@ Furthermore, Streamlit library transforms Investment Advisor into an interactive
   ![portfolios_comparison](Images/portfolios_comparison.PNG)<br/>
 - You can find more details about each portfolio by using a dropdown menu:<br/>
   ![portfolio_composition](Images/portfolio_composition.PNG)<br/>
-- The historical performance of each asset is shown to the user in an easy to read chart:<br/>
+- The historical performance of each asset is shown to the user in an interactive plot:<br/>
   ![historical_performance](Images/historical_performance.PNG)<br/>
+- Previous yearly returns and Sharpe Ratios can give users a quick overview of past portfolio performance:<br/>
+  ![yearly_returns_sharpe](Images/yearly_returns_sharpe.PNG)<br/>
+- Cumulative returns of every portfolio over the past three years are shown in an overlay plot:<br/>
+  ![cumulative_returns_overlay](Images/cumulative_returns_overlay.PNG)<br/>
 - A Monte Carlo simulation can be run on each portfolio selected, and the estimated returns will be displayed:<br/>
+- A 95% confidence interval is calculated from the simulation, and displayed to the user along with the portfolio makeup:<br/>
   ![simulation_1](Images/simulation_1.PNG)<br/>
+- The simulated returns are plotted on two graphs, a line graph and a histogram that provide useful information such as the median, mode, and quartiles.
   ![simulation_2](Images/simulation_2.PNG)<br/>
+  
+  
+
+https://user-images.githubusercontent.com/118786747/215937383-553539c1-729f-4841-bf23-42f4d28b6825.mp4
 
 
-
-https://user-images.githubusercontent.com/118786747/215371133-e1c822cd-d054-4f2e-80d0-c34880016df5.mp4
-
-
-
+  
 > Getting started<br/>
 
 - To use the Investment Advisor first clone the repository to your PC.<br/>
