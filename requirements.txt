@@ -1,6 +1,8 @@
 alpaca_trade_api
 bokeh
+fire
 holoviews
+hvplot
 matplotlib_inline
 numpy
 pandas
