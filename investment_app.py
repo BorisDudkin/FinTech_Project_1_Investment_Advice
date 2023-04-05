@@ -1,30 +1,35 @@
+import datetime
+import os
+import sys
+import time
+from pathlib import Path
+
+import aiohttp
+import alpaca_trade_api as tradeapi
+import frozenlist
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import sqlalchemy
 import streamlit as st
-import sys
-import os
-from dotenv import load_dotenv
-import datetime
-import time
-import alpaca_trade_api as tradeapi
+import yarl
 from alpaca_trade_api.rest import REST, TimeFrame
-from pathlib import Path
-import plotly.graph_objects as go
-import plotly.express as px
-
+from dotenv import load_dotenv
 
 sys.path.append('.\\Brian\\')
 sys.path.append('.\\Adam\\')
 sys.path.append('.\\Boris\\')
 
+# from API_calls.API_calls import get_api_data
+from Adam.MonteCarlo.MonteCarloEdited import MCSimulation
+from Boris.Monte_Carlo.monte_carlo_input import get_MC_input
+from Boris.Portfolio_analysis.historical_analysis import \
+    get_historical_analysis
 # import math
 from Boris.Score_calculator.questionnaire_st import get_bucket
 from Boris.Sector_name.sector_industry import get_sector_industry_weights
-from Boris.Portfolio_analysis.historical_analysis import get_historical_analysis
-from Boris.Static_data.static_data import step, capacity_questions, n_days, timeframe, num_sim, trading_days
-from Boris.Monte_Carlo.monte_carlo_input import get_MC_input
-# from API_calls.API_calls import get_api_data
-from Adam.MonteCarlo.MonteCarloEdited import MCSimulation
+from Boris.Static_data.static_data import (capacity_questions, n_days, num_sim,
+                                           step, timeframe, trading_days)
 
 #create internet page name
 st.set_page_config(page_title="Investment Advisor", layout='wide')
@@ -142,6 +147,7 @@ def get_api_data(tickers, days, timeframe='1Day'):
 # the function below transforms db tables to dataframes for further processing:
 def read_table_to_df(table, engine):
     return pd.read_sql_table(table, con=engine)
+    # return pd.read_sql_table(text(table, con=engine)
 
 # creating a list of dataframes to store risk capacity related dataframes:
 capacity_tables=capacity_questions

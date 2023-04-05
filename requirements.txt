@@ -12,4 +12,6 @@ pytz
 questionary
 SQLAlchemy
 streamlit
-
+aiohttp
+yarl
+frozenlist
